@@ -1,4 +1,4 @@
-@namespace "stdd"
+@namespace "zt"
 
 function get_metadata_value_string(metadata_item) {
   if (metadata_item == "") { return metadata_item }
@@ -30,19 +30,19 @@ function get_metadata_value(metadata, target_item,
   return _target_item_value
 }
 
-function pretty_print(raw_stdd, longest_path_length,
-      _raw_stdd_array, _path_trimmed, _path_padded, _description_formatted) {
-  split(raw_stdd, _raw_stdd_array, /,/)
-  _decorator = get_metadata_value(_raw_stdd_array[3], "decorator")
-  _path_trimmed = trim(_raw_stdd_array[1])
+function pretty_print(raw_dir, longest_path_length,
+      _raw_dir_array, _path_trimmed, _path_padded, _description_formatted) {
+  split(raw_dir, _raw_dir_array, /,/)
+  _decorator = get_metadata_value(_raw_dir_array[3], "decorator")
+  _path_trimmed = trim(_raw_dir_array[1])
   _path_padded = _path_trimmed \
       _repeatSymbol(" ", longest_path_length - length(_path_trimmed)) \
       _repeatSymbol(" ", 4)
-  _description_formatted = "-- " trim(_raw_stdd_array[2])
-  # Print standard directory.
+  _description_formatted = "-- " trim(_raw_dir_array[2])
+  # Print directory.
   printf("%s%s%s\n", _decorator, _path_padded, _description_formatted)
   # Print expanded directories.
-  if (get_metadata_value(_raw_stdd_array[3], "expand") == "true") {
+  if (get_metadata_value(_raw_dir_array[3], "expand") == "true") {
     system("find " _path_trimmed " -maxdepth 1 -type d \
         | sed '1d' \
         | xargs realpath \
