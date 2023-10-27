@@ -28,8 +28,7 @@ command -v zt_version > /dev/null && return
 AWKPATH="$AWKPATH:${0:a:h}"
 
 # Select the config home location.
-# TODO: Append zt to `XDG_CONFIG_HOME`.
-ZT_CONFIG_HOME=${XDG_CONFIG_HOME:-'~/.config/zt'}
+ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt | xargs realpath)"
 
 # Get the script version.
 function zt_version {
