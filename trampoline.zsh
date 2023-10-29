@@ -104,7 +104,7 @@ function zt_get_raw_directories_all {
 # @return string the trimmed value of the field.
 function zt_get_field_from_raw {
   gawk -F',' -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
-    print zt::trim($field_index) }'
+    print zt::_trim($field_index) }'
 }
 
 # Pretty print the provided lines of raw lines from the directories config file.
@@ -128,7 +128,7 @@ function zt_pretty_print {
 function zt_get_field_from_pretty {
   gawk -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
     split($0, fields_array, /\-\-/)
-    print(zt::trim(substr(fields_array[field_index], 2)))
+    print(zt::_trim(substr(fields_array[field_index], 2)))
   }'
 }
 # }}}
