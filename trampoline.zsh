@@ -65,31 +65,38 @@ function zt_get_field_index {
   echo $index
 }
 
+# @param $1 configuration file: 'main', 'local'.
+function zt_get_configuration_file_path {
+  case "$1" in
+    'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/directories.csv");;
+    'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/directories_local.csv");;
+  esac
+  echo "$config_file"
+}
+
+# @param $1 configuration file path.
+function zt_validate_main_configuration_file_path {
+  if ! [[ -f "$(zt_get_configuration_file_path 'main')" ]]; then
+    return 1
+  fi
+}
+
 # @return string main directories as-are, no transformations applied to contents.
 #         It is required to have this file.
 function zt_get_raw_directories {
-  local config_file_main=$(eval echo "$ZT_CONFIG_HOME/directories.csv")
-  if ! [[ -f "$config_file_main" ]]; then
-    echo "Missing configuration file: "$config_file_main"" 1>&2
-    return 1
-  fi
-  cat "$config_file_main"
+  cat $(zt_get_configuration_file_path 'main')
 }
 
 # @return string local directories as-are, no transformations applied to contents.
 #         It is not required to have this file.
 function zt_get_raw_directories_local {
-  local config_file_local=$(eval echo "$ZT_CONFIG_HOME/directories_local.csv")
-  if [[ -f "$config_file_local" ]]; then
-    cat "$config_file_local"
-  fi
+  cat $(zt_get_configuration_file_path 'local')
 }
 
 # @return string all directories as-are, no transformations applied to the files.
 #         (the public directories are listed first, then the private ones).
 function zt_get_raw_directories_all {
-  zt_get_raw_directories
-  zt_get_raw_directories_local
+  zt_get_raw_directories && zt_get_raw_directories_local
 }
 
 # @stdin raw lines from the directories config file.
@@ -131,6 +138,12 @@ function zt_get_field_from_pretty {
 
 # List directories in fzf and cd to the selected directory.
 function zt_widget_jump_to_directory {
+  zt_validate_main_configuration_file_path
+  if [[ $? -ne 0 ]]; then
+    printf "Missing configuration file: $(zt_get_configuration_file_path 'main')" 1>&2
+    zle accept-line
+    return 1
+  fi
   local list_local=${ZT_LIST_DIRECTORIES_LOCAL:-0}
   local zt_fetch_function='zt_get_raw_directories'
   if [[ $list_local -eq 1 ]]; then
