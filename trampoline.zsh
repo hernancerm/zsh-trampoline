@@ -29,8 +29,8 @@
 # Environment variables
 # ---
 #
-# ZT_LIST_DIRECTORIES_LOCAL=(0|1) [default:0]
-#     Whether to list local directories. By default, only main directories are shown.
+# ZT_LIST_DIRECTORIES_LOCAL=(0|1) [default:1]
+#     Whether to list local directories. By default, all directorise are listed.
 
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
@@ -43,7 +43,10 @@ typeset -gr ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
     | xargs realpath)"
 
 # Make the Gawk library available.
-AWKPATH="$AWKPATH:${0:a:h}"
+export AWKPATH="$AWKPATH:${0:a:h}"
+
+# Global configuration.
+export ZT_LIST_DIRECTORIES_LOCAL=1
 # }}}
 
 # Functions{{{
@@ -90,7 +93,7 @@ function zt_get_raw_directories {
 # @return string local directories as-are, no transformations applied to contents.
 #         It is not required to have this file.
 function zt_get_raw_directories_local {
-  cat $(zt_get_configuration_file_path 'local')
+  cat $(zt_get_configuration_file_path 'local') 2> /dev/null
 }
 
 # @return string all directories as-are, no transformations applied to the files.
@@ -151,7 +154,7 @@ function zt_widget_jump_to_directory {
   fi
   local selected_directory="$(eval $zt_fetch_function \
       | zt_pretty_print \
-      | fzf --height=~33% \
+      | fzf --height=~40% \
       | zt_get_field_from_pretty 'path')"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
