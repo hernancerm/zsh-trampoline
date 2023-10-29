@@ -67,5 +67,3 @@ function _repeatSymbol(symbol, times, _output) {
 function _toTrueFalse(boolean) {
   return boolean ? "true" : "false"
 }
-
-# vim: textwidth=80

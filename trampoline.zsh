@@ -92,7 +92,7 @@ function zt_pretty_print {
       | gawk '{ print(length($0)) }' \
       | sort -rn \
       | head -1)"
-  echo "$stdin" | gawk -i trampoline.gawk -v longest_path_length="${longest_path_length}" '{
+  echo "$stdin" | gawk -i trampoline.gawk -v longest_path_length=$longest_path_length '{
       zt::pretty_print($0, longest_path_length) }'
 }
 
@@ -105,5 +105,3 @@ function zt_get_field_from_pretty {
     print(zt::trim(substr(fields_array[field_index], 2)))
   }'
 }
-
-# vim: textwidth=90
