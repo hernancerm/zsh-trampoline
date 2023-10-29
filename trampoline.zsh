@@ -1,5 +1,9 @@
 # zsh-trampoline. Jump to the places that matter to you.
 #
+#
+# Configuration file
+# ---
+#
 # zsh-trampoline is configured via the file 'directories.csv'. The row format is:
 # {path}, {description}, {metadata}
 #
@@ -20,9 +24,19 @@
 #
 # Example:
 # ~/dev/gr, Git my remote-backed repos., decorator:* expand
+#
+#
+# Environment variables
+# ---
+#
+# ZT_LIST_DIRECTORIES_LOCAL=(0|1) [default:0]
+#     Whether to list local directories. By default, only main directories are shown.
 
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
+
+# Configuration{{{
+# ---
 
 # Select the config home location.
 typeset -gr ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
@@ -30,6 +44,10 @@ typeset -gr ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
 
 # Make the Gawk library available.
 AWKPATH="$AWKPATH:${0:a:h}"
+# }}}
+
+# Functions{{{
+# ---
 
 # Get the script version.
 function zt_version {
@@ -106,3 +124,44 @@ function zt_get_field_from_pretty {
     print(zt::trim(substr(fields_array[field_index], 2)))
   }'
 }
+# }}}
+
+# Widgets{{{
+# ---
+
+# List directories in fzf and cd to the selected directory.
+function zt_widget_jump_to_directory {
+  local list_local=${ZT_LIST_DIRECTORIES_LOCAL:-0}
+  local zt_fetch_function='zt_get_raw_directories'
+  if [[ $list_local -eq 1 ]]; then
+    local zt_fetch_function='zt_get_raw_directories_all'
+  fi
+  local selected_directory="$(eval $zt_fetch_function \
+      | zt_pretty_print \
+      | fzf --height=~33% \
+      | zt_get_field_from_pretty 'path')"
+  if [[ -z "$selected_directory" ]]; then
+    zle reset-prompt
+    return
+  fi
+  local selected_directory_expanded="$(eval echo $selected_directory)"
+  BUFFER="cd $selected_directory_expanded"
+  zle accept-line
+  zle reset-prompt
+}
+
+# Standard widget setup.
+function zt_setup_widget_jump_to_directory {
+  zle -N zt_widget_jump_to_directory
+  bindkey '^j' zt_widget_jump_to_directory
+}
+
+# Setup widget as per zsh-vi-mode requirements.
+# https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings
+function zt_zvm_setup_widget_jump_to_directory {
+  zvm_define_widget zt_widget_jump_to_directory
+  zvm_bindkey viins '^j' zt_widget_jump_to_directory
+}
+# }}}
+
+# vim: foldmethod=marker
