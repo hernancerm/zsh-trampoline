@@ -24,11 +24,12 @@
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
 
+# Select the config home location.
+typeset -gr ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
+    | xargs realpath)"
+
 # Make the Gawk library available.
 AWKPATH="$AWKPATH:${0:a:h}"
-
-# Select the config home location.
-ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt | xargs realpath)"
 
 # Get the script version.
 function zt_version {
