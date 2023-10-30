@@ -180,4 +180,4 @@ function zt_zvm_setup_widget_jump_to_directory {
 }
 # }}}
 
-# vim: foldmethod=marker
+# vim: foldmethod=marker foldlevel=0
