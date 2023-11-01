@@ -1,0 +1,128 @@
+= zsh-trampoline
+
+== Requirements
+
+* https://www.gnu.org/software/gawk/[Gawk] 4.1 or newer.
+* A recent version of https://github.com/junegunn/fzf[fzf].
+
+On macOS, the requirements can be installed using https://brew.sh/[Homebrew]:
+
+[source,shell]
+----
+brew install gawk fzf
+----
+
+== Installation
+
+To download and source the plugin, use your favorite plugin manager. For example, use
+https://github.com/rossmacarthur/sheldon[Sheldon]:
+
+[source,toml]
+----
+# ~/.config/sheldon/plugins.toml
+
+[plugins.poc-zsh-plugin]
+github = "HerCerM/zsh-trampoline"
+----
+
+The plugin provides two Zsh functions for setup which are meant to be called in the
+`.zshrc`. Only one function needs to be called depending on the following criteria:
+
+. `zt_setup_widget_jump_to_directory`: When _not_ using the plugin
+  https://github.com/jeffreytse/zsh-vi-mode[zsh-vi-mode].
+. `zt_zvm_setup_widget_jump_to_directory`: When using the plugin zsh-vi-mode.
+
+In case of using the second function, do the call inside of `zvm_after_init`, like this:
+
+[source,bash]
+----
+function zvm_after_init {
+  # In insert mode, press 'ctrl+j' to cd to a directory.
+  zt_zvm_setup_widget_jump_to_directory
+}
+----
+
+++++
+<table><tr>
+<td>
+ℹ️
+</td>
+<td>
+When using either the first or the second function, do the call <i>after</i> the
+zsh-trampoline plugin is sourced. For example, for Sheldon that is after
+<code>eval "$(sheldon source)"</code>.
+</td>
+</tr></table>
+++++
+
+== Configuration
+
+The configuration for zsh-trampoline is provided in two places:
+
+. A CSV configuration file.
+. Environment variables.
+
+=== 1. Configuration file `directories.csv`
+
+This CSV file is searched in the directory `$XDG_CONFIG_HOME/zt`. As a fallback, it's
+searched in `~/.config/zt` when the environment variable `$XDG_CONFIG_HOME` is not set.
+The row format of the file is as follows:
+
+----
+{path}, {description}, {metadata}
+----
+
+|===
+|Column |Data type |Required |Description
+
+| `{path}` | String | Yes
+| Relative or absolute path to a directory. Environment variables and the caret symbol
+(`~`) are recognized.
+
+| `{description}` | String | Yes
+| Short one-line description of the directory.
+
+| `{metadata}` | String | No
+| The items are separated by a space. Each item can have a value after a colon. If an item
+does not have a colon then the assumed value is to be `true`. If the item is not present
+then the assumed value is `false`.
+|===
+
+On the `{metadata}` column, the table below lists the recognized items. The items are
+separated by a space. Each item can have a value after a colon. If an item does not have a
+colon then the assumed value is `true`. If the item is not present then the assumed value
+is `false`.
+
+|===
+| Metadata item | Data type | Description
+
+| `decorator` | String
+| Prefix of the `{path}`. Must be a single char. Default: A single whitespace character.
+
+| `expand` | Boolean
+| Whether to list all level-1 subdirectories.
+|===
+
+Example of valid contents of a file `~/.config/zt/directories.csv`. Notice that spaces for
+padding are allowed.
+
+[source,csv]
+----
+~/dev/gc       , Git cloned repos not mine.     , decorator:* expand
+~/dev/gr       , Git my remote-backed repos.    , decorator:* expand
+~/dev/spub     , Scripts public.                , decorator:*
+----
+
+In addition to `directories.csv`, a second file can be provided following the same format,
+`directories_local.csv`. When listing the directories to select a jump location, the
+contents of the latter file are appended to the former file.
+
+=== 2. Environment variables
+
+|===
+| Environment variable | Allowed values | Default value | Description
+
+| `ZT_LIST_DIRECTORIES_LOCAL` | 0 or 1 | 1
+| Whether to list local directories (`directories_local.csv`). By default, all directories
+are listed.
+|===

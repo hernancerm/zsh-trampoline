@@ -1,36 +1,5 @@
-# zsh-trampoline. Jump to the places that matter to you.
-#
-#
-# Configuration file
-# ---
-#
-# zsh-trampoline is configured via the file 'directories.csv'. The row format is:
-# {path}, {description}, {metadata}
-#
-# {path} (string):
-#     Relative or absolute path to a directory. It can include environment variables and
-#     the caret symbol (~).
-#
-# {description} (string):
-#     Short one-line description of the directory.
-#
-# {metadata} (string):
-#     The items are separated by a space. Each item can have a value after a colon. If an
-#     item does not have a colon then the assumed value is to be `true`. If the item is
-#     not present then the assumed value is `false`. Metadata items:
-#     - decorator (string): Prefix of the {path} in the pretty print output. Must be a
-#                           single char. Default value: A single whitespace character.
-#     - expand (boolean): Whether to list all level-1 subdirectories in the pretty print.
-#
-# Example:
-# ~/dev/gr, Git my remote-backed repos., decorator:* expand
-#
-#
-# Environment variables
-# ---
-#
-# ZT_LIST_DIRECTORIES_LOCAL=(0|1) [default:1]
-#     Whether to list local directories. By default, all directorise are listed.
+# zsh-trampoline -- Jump to the places that matter to you.
+# https://github.com/HerCerM/zsh-trampoline
 
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
