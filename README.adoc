@@ -125,4 +125,10 @@ contents of the latter file are appended to the former file.
 | `ZT_LIST_DIRECTORIES_LOCAL` | 0 or 1 | 1
 | Whether to list local directories (`directories_local.csv`). By default, all directories
 are listed.
+
+| `ZT_KEY_MAP_JUMP_TO_DIRECTORY`
+| https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md[
+`bindkey` key map] | `^j`
+| Key sequence to press to list directories in fzf. By default, it's
++++<kbd>ctrl+j</kbd>+++.
 |===

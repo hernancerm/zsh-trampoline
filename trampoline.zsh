@@ -16,6 +16,7 @@ export AWKPATH="$AWKPATH:${0:a:h}"
 
 # Global configuration.
 export ZT_LIST_DIRECTORIES_LOCAL=1
+export ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
 # }}}
 
 # Functions{{{
@@ -138,14 +139,14 @@ function zt_widget_jump_to_directory {
 # Standard widget setup.
 function zt_setup_widget_jump_to_directory {
   zle -N zt_widget_jump_to_directory
-  bindkey '^j' zt_widget_jump_to_directory
+  bindkey $ZT_KEY_MAP_JUMP_TO_DIRECTORY zt_widget_jump_to_directory
 }
 
 # Setup widget as per zsh-vi-mode requirements.
 # https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings
 function zt_zvm_setup_widget_jump_to_directory {
   zvm_define_widget zt_widget_jump_to_directory
-  zvm_bindkey viins '^j' zt_widget_jump_to_directory
+  zvm_bindkey viins $ZT_KEY_MAP_JUMP_TO_DIRECTORY zt_widget_jump_to_directory
 }
 # }}}
 
