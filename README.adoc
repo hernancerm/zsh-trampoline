@@ -110,7 +110,7 @@ padding are allowed.
 ----
 ~/dev/gc       , Git cloned repos not mine.     , decorator:* expand
 ~/dev/gr       , Git my remote-backed repos.    , decorator:* expand
-~/dev/spub     , Scripts public.                , decorator:*
+~/dev/temp     , Temporary files.               , decorator:*
 ----
 
 In addition to `directories.csv`, a second file can be provided following the same format,

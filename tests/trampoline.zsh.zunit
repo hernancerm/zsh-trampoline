@@ -1,0 +1,42 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load '../trampoline.plugin.zsh'
+}
+
+@test 'zt_get_field_from_raw gets path' {
+  local path_actual="$(cat tests/_support/directories_simple_single_line.csv | \
+      zt_get_field_from_raw 'path')"
+  local path_expected='/tmp/zt_test_dir_1'
+  assert $path_actual same_as $path_expected
+}
+
+@test 'zt_get_field_from_raw gets description' {
+  local description_actual="$(cat tests/_support/directories_simple_single_line.csv | \
+      zt_get_field_from_raw 'description')"
+  local description_expected='Test directory 1'
+  assert $description_actual same_as $description_expected
+
+}
+
+@test 'zt_get_field_from_raw gets metadata' {
+  local metadata_actual="$(cat tests/_support/directories_simple_single_line.csv | \
+      zt_get_field_from_raw 'metadata')"
+  local metadata_expected='decorator:*'
+  assert $metadata_actual same_as $metadata_expected
+
+}
+
+@test 'zt_get_field_from_pretty gets path' {
+  local path_actual="$(cat tests/_support/directories_simple_single_line_pretty.csv | \
+      zt_get_field_from_pretty 'path')"
+  local path_expected='/tmp/zt_test_dir_1'
+  assert $path_actual same_as $path_expected
+}
+
+@test 'zt_get_field_from_pretty gets description' {
+  local description_actual="$(cat tests/_support/directories_simple_single_line_pretty.csv | \
+      zt_get_field_from_pretty 'description')"
+  local description_expected='Test directory 1'
+  assert $description_actual same_as $description_expected
+}
