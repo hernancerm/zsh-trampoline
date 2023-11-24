@@ -28,13 +28,13 @@ function zt_version {
   echo '0.1.0-SNAPSHOT'
 }
 
-# @param $1 field name, options: 'path', 'description', 'metadata'.
+# @param $1 field name, options: 'path', 'description', 'expand'.
 function zt_get_field_index {
   local index
   case "$1" in
     path)        index=1;;
     description) index=2;;
-    metadata)    index=3;;
+    expand)      index=3;;
   esac
   echo $index
 }
@@ -74,7 +74,7 @@ function zt_get_raw_directories_all {
 }
 
 # @stdin raw lines from the directories config file.
-# @param $1 name of field to retrieve: `path`, `description` or `metadata`.
+# @param $1 name of field to retrieve: `path`, `description` or `expand`.
 # @return string the trimmed value of the field.
 function zt_get_field_from_raw {
   gawk -F',' -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
@@ -102,7 +102,11 @@ function zt_pretty_print {
 function zt_get_field_from_pretty {
   gawk -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
     split($0, fields_array, /\-\-/)
-    print(zt::_trim(substr(fields_array[field_index], 2)))
+    field_value = zt::_trim(fields_array[field_index])
+    if (field_index == 1) {
+      sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", field_value)
+    }
+    print(field_value)
   }'
 }
 # }}}
