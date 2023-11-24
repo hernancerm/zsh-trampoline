@@ -42,8 +42,8 @@ function zt_get_field_index {
 # @param $1 configuration file: 'main', 'local'.
 function zt_get_configuration_file_path {
   case "$1" in
-    'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/directories.csv");;
-    'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/directories_local.csv");;
+    'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/config.csv");;
+    'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/config_local.csv");;
   esac
   echo "$config_file"
 }
