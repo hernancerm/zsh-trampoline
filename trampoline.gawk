@@ -6,19 +6,22 @@
 # @param longest_path_length integer lenght of longest path in the dirs config file.
 # @return void
 function pretty_print(raw_dir, longest_path_length,
-      _raw_dir_array, _path_trimmed, _path_padded, _description_formatted) {
+      _raw_dir_array, _path_padded, _description_formatted) {
   split(raw_dir, _raw_dir_array, /,/)
-  _path_trimmed = _trim(_raw_dir_array[1])
-  _path_padded = _path_trimmed \
-      _repeatSymbol(" ", longest_path_length - length(_path_trimmed)) \
-      _repeatSymbol(" ", 4)
-  _description_formatted = "-- " _trim(_raw_dir_array[2])
   # Print directory.
-  printf("%s%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], \
-         _path_padded, _description_formatted)
+  if (_trim(_raw_dir_array[2]) == "") {
+    printf("%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], _trim(_raw_dir_array[1]))
+  } else {
+    _path_padded = _trim(_raw_dir_array[1]) \
+        _repeatSymbol(" ", longest_path_length - length(_trim(_raw_dir_array[1]))) \
+        _repeatSymbol(" ", 4)
+    _description_formatted = "-- " _trim(_raw_dir_array[2])
+    printf("%s%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], \
+           _path_padded, _description_formatted)
+  }
   # Print expanded directories.
   if (_trim(_raw_dir_array[3]) == "true") {
-    system("find " _path_trimmed " -maxdepth 1 -type d \
+    system("find " _trim(_raw_dir_array[1]) " -maxdepth 1 -type d \
         | sed '1d' \
         | xargs realpath \
         | sed 's#" ENVIRON["HOME"] "#~#' \
