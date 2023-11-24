@@ -8,14 +8,14 @@
 function pretty_print(raw_dir, longest_path_length,
       _raw_dir_array, _path_trimmed, _path_padded, _description_formatted) {
   split(raw_dir, _raw_dir_array, /,/)
-  _decorator = get_metadata_value(_raw_dir_array[3], "decorator")
   _path_trimmed = _trim(_raw_dir_array[1])
   _path_padded = _path_trimmed \
       _repeatSymbol(" ", longest_path_length - length(_path_trimmed)) \
       _repeatSymbol(" ", 4)
   _description_formatted = "-- " _trim(_raw_dir_array[2])
   # Print directory.
-  printf("%s%s%s\n", _decorator, _path_padded, _description_formatted)
+  printf("%s%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], \
+         _path_padded, _description_formatted)
   # Print expanded directories.
   if (get_metadata_value(_raw_dir_array[3], "expand") == "true") {
     system("find " _path_trimmed " -maxdepth 1 -type d \
@@ -42,10 +42,6 @@ function get_metadata_value(metadata, target_item,
     _target_item_value = get_metadata_value_string(_target_item_extracted)
   } else {
     _target_item_value = get_metadata_value_boolean(_target_item_extracted)
-  }
-  if (target_item == "decorator" \
-        && (length(_target_item_value) > 1 || _target_item_value == "")) {
-    _target_item_value = " "
   }
   return _target_item_value
 }

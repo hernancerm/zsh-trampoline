@@ -15,6 +15,7 @@ typeset -gr ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
 export AWKPATH="$AWKPATH:${0:a:h}"
 
 # Global configuration.
+export ZT_DIRECTORY_DECORATOR='*'
 export ZT_LIST_DIRECTORIES_LOCAL=1
 export ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
 # }}}
