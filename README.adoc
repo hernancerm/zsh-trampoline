@@ -4,12 +4,13 @@
 
 . Install the requirements listed in <<Requirements>>.
 . Follow the instructions in the section <<Installation>>.
-. Add your `directories.csv` file as described in <<Configuration>>.
+. Add your configuration file as described in <<Configuration>>.
 
 == Requirements
 
 * https://www.gnu.org/software/gawk/[Gawk] 4.1 or newer.
 * A recent version of https://github.com/junegunn/fzf[fzf].
+* Zsh as your shell (of course).
 
 On macOS, the requirements can be installed using https://brew.sh/[Homebrew]:
 
@@ -68,68 +69,62 @@ The configuration for zsh-trampoline is provided in two places:
 . A CSV configuration file.
 . Environment variables.
 
-=== 1. Configuration file `directories.csv`
+=== 1. Configuration file `config.csv`
 
 This CSV file is searched in the directory `$XDG_CONFIG_HOME/zt`. As a fallback, it's
 searched in `~/.config/zt` when the environment variable `$XDG_CONFIG_HOME` is not set.
-The row format of the file is as follows:
+The row format of the file is as shown below. Conceptually, each row represents a
+directory that can be jumped to, and each directory can have metadata associated with it.
 
+[source]
 ----
-{path}, {description}, {metadata}
+{path}, {description}, {expand}
+|____|  |_____________________|
+ \       \
+  \       \__ metadata
+   \
+    \__ directory
 ----
 
 |===
-|Column |Data type |Required |Description
+|Column |Required |Description
 
-| `{path}` | String | Yes
+| `{path}` | Yes
 | Relative or absolute path to a directory. Environment variables and the caret symbol
 (`~`) are recognized.
 
-| `{description}` | String | Yes
-| Short one-line description of the directory.
+| `{description}` | No
+| Short one-line description of the directory. Must not contain a comma (`,`).
 
-| `{metadata}` | String | No
-| The items are separated by a space. Each item can have a value after a colon. If an item
-does not have a colon then the assumed value is to be `true`. If the item is not present
-then the assumed value is `false`.
+| `{expand}` | No
+| Whether to list all level-1 subdirectories. To enable set to `true`.
 |===
 
-On the `{metadata}` column, the table below lists the recognized items. The items are
-separated by a space. Each item can have a value after a colon. If an item does not have a
-colon then the assumed value is `true`. If the item is not present then the assumed value
-is `false`.
-
-|===
-| Metadata item | Data type | Description
-
-| `decorator` | String
-| Prefix of the `{path}`. Must be a single char. Default: A single whitespace character.
-
-| `expand` | Boolean
-| Whether to list all level-1 subdirectories.
-|===
-
-Example of valid contents of a file `~/.config/zt/directories.csv`. Notice that spaces for
-padding are allowed.
+Example of valid contents of a file `~/.config/zt/config.csv`. Notice that spaces for
+padding are allowed, but are not required.
 
 [source,csv]
 ----
-~/dev/gc       , Git cloned repos not mine.     , decorator:* expand
-~/dev/gr       , Git my remote-backed repos.    , decorator:* expand
-~/dev/temp     , Temporary files.               , decorator:*
+~/dev/gc                      ,Git cloned repos not mine.  ,true
+~/dev/temp                    ,Temporary files.
+~/.local/share/sheldon/repos
 ----
 
-In addition to `directories.csv`, a second file can be provided following the same format,
-`directories_local.csv`. When listing the directories to select a jump location, the
-contents of the latter file are appended to the former file.
+In addition to `config.csv`, a second file can be provided following the same format,
+`config_local.csv`. When listing the directories to select a jump location, the
+contents of the latter file may be appended to the former file.
 
 === 2. Environment variables
 
 |===
 | Environment variable | Allowed values | Default value | Description
 
-| `ZT_LIST_DIRECTORIES_LOCAL` | 0 or 1 | 1
-| Whether to list local directories (`directories_local.csv`). By default, all directories
+| `ZT_DIRECTORY_DECORATOR` | Single character | `*`
+| Prefix of the `{path}` for every row in the CSV config files. This eases selection
+through fzf by allowing to exclude the expanded directories.
+
+| `ZT_LIST_DIRECTORIES_LOCAL` | `0` or `1` | `1`
+| Whether to list directories listed in `config_local.csv`. By default, all directories
 are listed.
 
 | `ZT_KEY_MAP_JUMP_TO_DIRECTORY`
