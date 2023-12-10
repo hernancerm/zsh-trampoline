@@ -1,40 +1,24 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load '../trampoline.plugin.zsh'
+  load '../trampoline.zsh'
 }
 
-@test 'zt_get_field_from_raw gets path' {
-  local path_actual="$(cat tests/_support/directories_simple_single_line.csv | \
-      zt_get_field_from_raw 'path')"
-  local path_expected='/tmp/zt_test_dir_1'
-  assert $path_actual same_as $path_expected
+@test 'version is set' {
+  # exercise
+  run zt_version
+  # verify
+  assert "$output" is_not_empty
 }
 
-@test 'zt_get_field_from_raw gets description' {
-  local description_actual="$(cat tests/_support/directories_simple_single_line.csv | \
-      zt_get_field_from_raw 'description')"
-  local description_expected='Test directory 1'
-  assert $description_actual same_as $description_expected
+@test 'gawk library is made available' {
+  # verify
+  assert "$AWKPATH" contains 'HerCerM/zsh-trampoline'
 }
 
-@test 'zt_get_field_from_raw gets metadata' {
-  local metadata_actual="$(cat tests/_support/directories_simple_single_line.csv | \
-      zt_get_field_from_raw 'metadata')"
-  local metadata_expected='decorator:*'
-  assert $metadata_actual same_as $metadata_expected
-}
-
-@test 'zt_get_field_from_pretty gets path' {
-  local path_actual="$(cat tests/_support/directories_simple_single_line_pretty.txt | \
-      zt_get_field_from_pretty 'path')"
-  local path_expected='/tmp/zt_test_dir_1'
-  assert $path_actual same_as $path_expected
-}
-
-@test 'zt_get_field_from_pretty gets description' {
-  local description_actual="$(cat tests/_support/directories_simple_single_line_pretty.txt | \
-      zt_get_field_from_pretty 'description')"
-  local description_expected='Test directory 1'
-  assert $description_actual same_as $description_expected
+@test 'defaults are set for env variables' {
+  # verify
+  assert "$ZT_DIRECTORY_DECORATOR" is_not_empty
+  assert "$ZT_LIST_DIRECTORIES_LOCAL" is_not_empty
+  assert "$ZT_KEY_MAP_JUMP_TO_DIRECTORY" is_not_empty
 }

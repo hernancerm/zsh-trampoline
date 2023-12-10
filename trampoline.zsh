@@ -28,7 +28,7 @@ function zt_version {
   echo '0.1.0-SNAPSHOT'
 }
 
-# @param $1 field name, options: 'path', 'description', 'expand'.
+# @param $1 Field name, options: 'path', 'description', 'expand'.
 function zt_get_field_index {
   local index
   case "$1" in
@@ -39,7 +39,7 @@ function zt_get_field_index {
   echo $index
 }
 
-# @param $1 configuration file: 'main', 'local'.
+# @param $1 Configuration file: 'main', 'local'.
 function zt_get_configuration_file_path {
   case "$1" in
     'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/config.csv");;
@@ -48,34 +48,44 @@ function zt_get_configuration_file_path {
   echo "$config_file"
 }
 
-# @param $1 configuration file path.
+# @param $1 Configuration file path.
 function zt_validate_main_configuration_file_path {
   if ! [[ -f "$(zt_get_configuration_file_path 'main')" ]]; then
     return 1
   fi
 }
 
-# @return string main directories as-are, no transformations applied to contents.
+# @return string Main directories as-are, no transformations applied to contents.
 #         It is required to have this file.
-function zt_get_raw_directories {
+function zt_get_raw_directories_main {
   cat $(zt_get_configuration_file_path 'main')
 }
 
-# @return string local directories as-are, no transformations applied to contents.
+# @return string Local directories as-are, no transformations applied to contents.
 #         It is not required to have this file.
 function zt_get_raw_directories_local {
   cat $(zt_get_configuration_file_path 'local') 2> /dev/null
 }
 
-# @return string all directories as-are, no transformations applied to the files.
+# @return string All directories as-are, no transformations applied to the files.
 #         (the public directories are listed first, then the private ones).
 function zt_get_raw_directories_all {
-  zt_get_raw_directories && zt_get_raw_directories_local
+  zt_get_raw_directories_main && zt_get_raw_directories_local
 }
 
-# @stdin raw lines from the directories config file.
-# @param $1 name of field to retrieve: `path`, `description` or `expand`.
-# @return string the trimmed value of the field.
+# @return string Function name which when invoked returns a list of raw directories.
+function zt_get_raw_directories_function {
+  local list_local=${ZT_LIST_DIRECTORIES_LOCAL:-0}
+  local zt_raw_directories_function='zt_get_raw_directories_main'
+  if [[ $list_local -eq 1 ]]; then
+    local zt_raw_directories_function='zt_get_raw_directories_all'
+  fi
+  echo "$zt_raw_directories_function"
+}
+
+# @stdin Raw lines from the directories config file.
+# @param $1 Name of field to retrieve: `path`, `description` or `expand`.
+# @return string The trimmed value of the field.
 function zt_get_field_from_raw {
   gawk -F',' -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
     print zt::_trim($field_index) }'
@@ -83,8 +93,8 @@ function zt_get_field_from_raw {
 
 # Pretty print the provided lines of raw lines from the directories config file.
 #
-# @stdin raw lines from the directories config file.
-# @return string pretty-printed directories.
+# @stdin Raw lines from the directories config file.
+# @return string Pretty-printed directories.
 function zt_pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
@@ -96,9 +106,9 @@ function zt_pretty_print {
       zt::pretty_print($0, longest_path_length) }'
 }
 
-# @stdin prettified lines of lines from the directories config file.
-# @param $1 name of field to retrieve: `path` or `description`.
-# @return string the trimmed value of the field.
+# @stdin Prettified lines of lines from the directories config file.
+# @param $1 Name of field to retrieve: `path` or `description`.
+# @return string The trimmed value of the field.
 function zt_get_field_from_pretty {
   gawk -i trampoline.gawk -v field_index="$(zt_get_field_index $1)" '{
     split($0, fields_array, /\-\-/)
@@ -122,12 +132,8 @@ function zt_widget_jump_to_directory {
     zle accept-line
     return 1
   fi
-  local list_local=${ZT_LIST_DIRECTORIES_LOCAL:-0}
-  local zt_fetch_function='zt_get_raw_directories'
-  if [[ $list_local -eq 1 ]]; then
-    local zt_fetch_function='zt_get_raw_directories_all'
-  fi
-  local selected_directory="$(eval $zt_fetch_function \
+  local zt_raw_directories_function="$(zt_get_raw_directories_function)"
+  local selected_directory="$(eval $zt_raw_directories_function \
       | zt_pretty_print \
       | fzf --height=~55% --tiebreak=index \
       | zt_get_field_from_pretty 'path')"

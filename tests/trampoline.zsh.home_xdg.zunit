@@ -1,0 +1,30 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load './_support/uuid.zsh'
+  export XDG_CONFIG_HOME="$HOME/$uuid"
+  mkdir -p "$XDG_CONFIG_HOME"
+  load '../trampoline.zsh'
+}
+
+@teardown {
+  rmdir "$HOME/$uuid"
+}
+
+@test 'zt_get_configuration_file_path gets main xdg' {
+  # setup
+  local path_expected="$HOME/$uuid/zt/config.csv"
+  # exercise
+  local path_actual="$(zt_get_configuration_file_path 'main')"
+  # verify
+  assert "$path_actual" same_as "$path_expected"
+}
+
+@test 'zt_get_configuration_file_path gets local xdg' {
+  # setup
+  local path_expected="$HOME/$uuid/zt/config_local.csv"
+  # exercise
+  local path_actual="$(zt_get_configuration_file_path 'local')"
+  # verify
+  assert "$path_actual" same_as "$path_expected"
+}
