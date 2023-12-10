@@ -24,11 +24,11 @@
   run zt_get_raw_directories_main
   # verify
   assert $state equals 0
-  assert $output is_not_empty
+  assert "$output" is_not_empty
   assert ${#lines[@]} equals 3
-  assert ${lines[1]} same_as '/tmp/dir1'
-  assert ${lines[2]} same_as '/tmp/dir2'
-  assert ${lines[3]} same_as '/tmp/dir3'
+  assert "${lines[1]}" same_as '/tmp/dir1'
+  assert "${lines[2]}" same_as '/tmp/dir2'
+  assert "${lines[3]}" same_as '/tmp/dir3'
 }
 
 @test 'zt_get_raw_directories_local gets local raw directories' {
@@ -36,10 +36,10 @@
   run zt_get_raw_directories_local
   # verify
   assert $state equals 0
-  assert $output is_not_empty
+  assert "$output" is_not_empty
   assert ${#lines[@]} equals 2
-  assert ${lines[1]} same_as '/tmp/ldir1'
-  assert ${lines[2]} same_as '/tmp/ldir2'
+  assert "${lines[1]}" same_as '/tmp/ldir1'
+  assert "${lines[2]}" same_as '/tmp/ldir2'
 }
 
 @test 'zt_get_raw_directories_all gets all raw directories' {
@@ -47,11 +47,11 @@
   run zt_get_raw_directories_all
   # verify
   assert $state equals 0
-  assert $output is_not_empty
+  assert "$output" is_not_empty
   assert ${#lines[@]} equals 5
-  assert ${lines[1]} same_as '/tmp/dir1'
-  assert ${lines[2]} same_as '/tmp/dir2'
-  assert ${lines[3]} same_as '/tmp/dir3'
-  assert ${lines[4]} same_as '/tmp/ldir1'
-  assert ${lines[5]} same_as '/tmp/ldir2'
+  assert "${lines[1]}" same_as '/tmp/dir1'
+  assert "${lines[2]}" same_as '/tmp/dir2'
+  assert "${lines[3]}" same_as '/tmp/dir3'
+  assert "${lines[4]}" same_as '/tmp/ldir1'
+  assert "${lines[5]}" same_as '/tmp/ldir2'
 }

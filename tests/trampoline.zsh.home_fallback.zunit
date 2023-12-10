@@ -9,16 +9,18 @@
   # setup
   local path_expected="$HOME/.config/zt/config.csv"
   # exercise
-  local path_actual="$(zt_get_configuration_file_path 'main')"
+  run zt_get_configuration_file_path 'main'
   # verify
-  assert "$path_actual" same_as "$path_expected"
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
 }
 
 @test 'zt_get_configuration_file_path gets local fallback' {
   # setup
   local path_expected="$HOME/.config/zt/config_local.csv"
   # exercise
-  local path_actual="$(zt_get_configuration_file_path 'local')"
+  run zt_get_configuration_file_path 'local'
   # verify
-  assert "$path_actual" same_as "$path_expected"
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
 }

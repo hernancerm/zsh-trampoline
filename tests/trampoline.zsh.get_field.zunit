@@ -10,10 +10,10 @@
   local raw_line='/tmp/dir, Test directory., true'
   local path_expected='/tmp/dir'
   # exercise
-  local path_actual="$(echo "$raw_line" | \
-      zt_get_field_from_raw 'path')"
+  run zt_get_field_from_raw 'path' <<< "$raw_line"
   # verify
-  assert "$path_actual" same_as "$path_expected"
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
 }
 
 @test 'zt_get_field_from_raw gets description' {
@@ -21,10 +21,10 @@
   local raw_line='/tmp/dir, Test directory., true'
   local description_expected='Test directory.'
   # exercise
-  local description_actual="$(echo "$raw_line" | \
-      zt_get_field_from_raw 'description')"
+  run zt_get_field_from_raw 'description' <<< "$raw_line"
   # verify
-  assert "$description_actual" same_as "$description_expected"
+  assert $state equals 0
+  assert "$output" same_as "$description_expected"
 }
 
 @test 'zt_get_field_from_raw gets expand' {
@@ -32,10 +32,10 @@
   local raw_line='/tmp/dir, Test directory., true'
   local expand_expected='true'
   # exercise
-  local expand_actual="$(echo "$raw_line" | \
-      zt_get_field_from_raw 'expand')"
+  run zt_get_field_from_raw 'expand' <<< "$raw_line"
   # verify
-  assert "$expand_actual" same_as "$expand_expected"
+  assert $state equals 0
+  assert "$output" same_as "$expand_expected"
 }
 
 @test 'zt_get_field_from_raw gets empty description' {
@@ -43,10 +43,10 @@
   local raw_line='/tmp/dir'
   local description_expected=''
   # exercise
-  local description_actual="$(echo "$raw_line" | \
-      zt_get_field_from_raw 'description')"
+  run zt_get_field_from_raw 'description' <<< "$raw_line"
   # verify
-  assert "$description_actual" same_as "$description_expected"
+  assert $state equals 0
+  assert "$output" same_as "$description_expected"
 }
 
 @test 'zt_get_field_from_raw gets empty expand' {
@@ -54,10 +54,10 @@
   local raw_line='/tmp/dir'
   local expand_expected=''
   # exercise
-  local expand_actual="$(echo "$raw_line" | \
-      zt_get_field_from_raw 'expand')"
+  run zt_get_field_from_raw 'expand' <<< "$raw_line"
   # verify
-  assert "$expand_actual" same_as "$expand_expected"
+  assert $state equals 0
+  assert "$output" same_as "$expand_expected"
 }
 
 @test 'zt_get_field_from_pretty gets path on long format' {
@@ -65,10 +65,10 @@
   local pretty_line='*/tmp/dir    -- Test directory.'
   local path_expected='/tmp/dir'
   # exercise
-  local path_actual="$(echo "$pretty_line" | \
-      zt_get_field_from_pretty 'path')"
+  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
   # verify
-  assert "$path_actual" same_as "$path_expected"
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
 }
 
 @test 'zt_get_field_from_pretty gets description on long format' {
@@ -76,10 +76,10 @@
   local pretty_line='*/tmp/dir    -- Test directory.'
   local description_expected='Test directory.'
   # exercise
-  local description_actual="$(echo "$pretty_line" | \
-      zt_get_field_from_pretty 'description')"
+  run zt_get_field_from_pretty 'description' <<< "$pretty_line"
   # verify
-  assert "$description_actual" same_as "$description_expected"
+  assert $state equals 0
+  assert "$output" same_as "$description_expected"
 }
 
 @test 'zt_get_field_from_pretty gets path on short format' {
@@ -87,8 +87,8 @@
   local pretty_line='*/tmp/dir'
   local path_expected='/tmp/dir'
   # exercise
-  local path_actual="$(echo "$pretty_line" | \
-      zt_get_field_from_pretty 'path')"
+  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
   # verify
-  assert "$path_actual" same_as "$path_expected"
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
 }
