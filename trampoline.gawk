@@ -9,29 +9,30 @@ function pretty_print(raw_dir, longest_path_length,
       _raw_dir_array, _path_padded, _description_formatted) {
   split(raw_dir, _raw_dir_array, /,/)
   # Print directory.
-  if (_trim(_raw_dir_array[2]) == "") {
-    printf("%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], _trim(_raw_dir_array[1]))
+  if (trim(_raw_dir_array[2]) == "") {
+    printf("%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], trim(_raw_dir_array[1]))
   } else {
-    _path_padded = _trim(_raw_dir_array[1]) \
-        _repeatSymbol(" ", longest_path_length - length(_trim(_raw_dir_array[1]))) \
+    _path_padded = trim(_raw_dir_array[1]) \
+        _repeatSymbol(" ", longest_path_length - length(trim(_raw_dir_array[1]))) \
         _repeatSymbol(" ", 4)
-    _description_formatted = "-- " _trim(_raw_dir_array[2])
+    _description_formatted = "-- " trim(_raw_dir_array[2])
     printf("%s%s%s\n", ENVIRON["ZT_DIRECTORY_DECORATOR"], \
            _path_padded, _description_formatted)
   }
   # Print expanded directories.
-  if (_trim(_raw_dir_array[3]) == "true") {
-    system("find " _trim(_raw_dir_array[1]) " -maxdepth 1 -type d \
+  if (trim(_raw_dir_array[3]) == "true") {
+    system("find " trim(_raw_dir_array[1]) " -maxdepth 1 -type d \
         | sed '1d' \
         | xargs realpath \
         | sed 's#" ENVIRON["HOME"] "#~#' \
+        | sort \
         | xargs printf ' %s\n'")
   }
 }
 
 # @param string string.
 # @return string trimmed string.
-function _trim(string) {
+function trim(string) {
   return awk::gensub(/^\s+|\s+$/, "", "g", string);
 }
 

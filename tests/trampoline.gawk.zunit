@@ -1,80 +1,116 @@
 #!/usr/bin/env zunit
 
+# Setup directory structure created:
+#
+# $HOME/$uuid
+# ├── dir1
+# │   ├── dir1
+# │   └── dir2
+# ├── dir2
+# │   └── file.txt
+# └── dir3
+#     ├── dir
+#     └── file.txt
 @setup {
-  load '../trampoline.plugin.zsh'
-  mkdir -p '/tmp/zt_test_dir_1/nested_1'
-  mkdir -p '/tmp/zt_test_dir_1/nested_2'
-  mkdir -p '/tmp/zt_test_dir_2'
-  touch    '/tmp/zt_test_dir_2/zt_test_file.txt'
-  mkdir -p '/tmp/zt_test_dir_3/nested_1'
+  load './_support/uuid.zsh'
+  mkdir -p  $HOME/$uuid/dir1/dir{1..2}
+  mkdir -p "$HOME/$uuid/dir2" && touch "$HOME/$uuid/dir2/file.txt"
+  mkdir -p "$HOME/$uuid/dir3/dir" && touch "$HOME/$uuid/dir3/file.txt"
+  export ZT_DIRECTORY_DECORATOR='*'
+  load '../trampoline.zsh'
 }
 
 @teardown {
-  rm -rf '/tmp/zt_test_dir_*'
-  rm '/tmp/zt_test_dir_2/zt_test_file.txt'
+  rmdir $HOME/$uuid/dir1/dir{1..2}
+  rmdir $HOME/$uuid/dir1
+  rm    $HOME/$uuid/dir2/file.txt
+  rmdir $HOME/$uuid/dir2
+  rm    $HOME/$uuid/dir3/file.txt
+  rmdir $HOME/$uuid/dir3/dir
+  rmdir $HOME/$uuid/dir3
+  rmdir $HOME/$uuid
 }
 
-@test 'get_metadata_value_string returns string given string containing a colon' {
-  local output="$(echo 'decorator:*' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value_string($0) }')"
-  assert $output same_as '*'
+@test 'pretty_print lists directories without descriptions' {
+  # setup
+  local dirs_raw="\
+    ~/$uuid/dir1
+    ~/$uuid/dir2
+    ~/$uuid/dir3"
+  # exercise
+  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  # verify
+  assert $state equals 0
+  assert "$output" is_not_empty
+  assert ${#lines[@]} equals 3
+  assert "${lines[1]}" same_as "*~/$uuid/dir1"
+  assert "${lines[2]}" same_as "*~/$uuid/dir2"
+  assert "${lines[3]}" same_as "*~/$uuid/dir3"
 }
 
-@test 'get_metadata_value_boolean returns true given string' {
-  local output="$(echo 'expand' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value_boolean($0) }')"
-  assert $output same_as 'true'
+@test 'pretty_print lists directories with descriptions' {
+  # setup
+  local dirs_raw="\
+    ~/$uuid/dir1, Temp dir 1.
+    ~/$uuid/dir2, Temp dir 2.
+    ~/$uuid/dir3, Temp dir 3."
+  # exercise
+  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  # verify
+  assert $state equals 0
+  assert "$output" is_not_empty
+  assert ${#lines[@]} equals 3
+  assert "${lines[1]}" same_as "*~/$uuid/dir1    -- Temp dir 1."
+  assert "${lines[2]}" same_as "*~/$uuid/dir2    -- Temp dir 2."
+  assert "${lines[3]}" same_as "*~/$uuid/dir3    -- Temp dir 3."
 }
 
-@test 'get_metadata_value_boolean returns false given empty string' {
-  local output="$(echo '' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value_boolean($0) }')"
-  assert $output same_as 'false'
+@test 'pretty_print lists directories with expand' {
+  # setup
+  local dirs_raw="\
+    ~/$uuid/dir1,, true
+    ~/$uuid/dir2,, true
+    ~/$uuid/dir3,, true"
+  # exercise
+  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  # verify
+  assert $state equals 0
+  assert "$output" is_not_empty
+  assert ${#lines[@]} equals 6
+  assert "${lines[1]}" same_as "*~/$uuid/dir1"
+  assert "${lines[2]}" same_as " ~/$uuid/dir1/dir1"
+  assert "${lines[3]}" same_as " ~/$uuid/dir1/dir2"
+  assert "${lines[4]}" same_as "*~/$uuid/dir2"
+  assert "${lines[5]}" same_as "*~/$uuid/dir3"
+  assert "${lines[6]}" same_as " ~/$uuid/dir3/dir"
 }
 
-@test 'get_metadata_value returns string given decorator' {
-  local output="$(echo 'decorator:*' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value($0, "decorator") }')"
-  assert $output same_as '*'
+@test 'pretty_print lists directories with descriptions and expand' {
+  # setup
+  local dirs_raw="\
+    ~/$uuid/dir1, Test dir 1., true
+    ~/$uuid/dir2, Test dir 2., true
+    ~/$uuid/dir3, Test dir 3., true"
+  # exercise
+  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  # verify
+  assert $state equals 0
+  assert "$output" is_not_empty
+  assert ${#lines[@]} equals 6
+  assert "${lines[1]}" same_as "*~/$uuid/dir1    -- Test dir 1."
+  assert "${lines[2]}" same_as " ~/$uuid/dir1/dir1"
+  assert "${lines[3]}" same_as " ~/$uuid/dir1/dir2"
+  assert "${lines[4]}" same_as "*~/$uuid/dir2    -- Test dir 2."
+  assert "${lines[5]}" same_as "*~/$uuid/dir3    -- Test dir 3."
+  assert "${lines[6]}" same_as " ~/$uuid/dir3/dir"
 }
 
-@test 'get_metadata_value returns decorator default given no decorator' {
-  local output="$(echo '' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value($0, "decorator") }')"
-  assert $output same_as ' '
-}
-
-@test 'get_metadata_value returns decorator default given string longer than one character' {
-  local output="$(echo 'decorator:long' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value($0, "decorator") }')"
-  assert $output same_as ' '
-}
-
-@test 'get_metadata_value returns true given boolean metadata item' {
-  local output="$(echo 'expand' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value($0, "expand") }')"
-  assert $output same_as 'true'
-}
-
-@test 'get_metadata_value returns false given no boolean metadata item' {
-  local output="$(echo '' | \
-      gawk -i trampoline.gawk '{ print zt::get_metadata_value($0, "expand") }')"
-  assert $output same_as 'false'
-}
-
-@test 'pretty_print lists directories' {
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 18) }' \
-      tests/_support/directories_simple.csv
-  local output_lines="$(echo $output | sed -n '$=')"
-  local directories="$(sed -n '$=' tests/_support/directories_simple.csv)"
-  assert $output_lines equals $directories
-}
-
-@test 'pretty_print lists expanded directories' {
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 18) }' \
-      tests/_support/directories_expand.csv
-  local output_lines="$(printf $output | sed -n '$=')"
-  local directories="$(sed -n '$=' tests/_support/directories_expand.csv)"
-  local expanded_directories_expected=3
-  assert $output_lines equals $(($directories + $expanded_directories_expected))
+@test 'trim removes leading and trailing whitespace' {
+  # setup
+  local string='  this  is some   text      '
+  # exercise
+  run gawk -i trampoline.gawk '{ printf zt::trim($0)}' <<< "$string"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as "this  is some   text"
 }
