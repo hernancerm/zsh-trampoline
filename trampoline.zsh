@@ -75,7 +75,7 @@ function zt_get_raw_directories_all {
 
 # @return string Function name which when invoked returns a list of raw directories.
 function zt_get_raw_directories_function {
-  local list_local=${ZT_LIST_DIRECTORIES_LOCAL:-0}
+  local list_local=$ZT_LIST_DIRECTORIES_LOCAL
   local zt_raw_directories_function='zt_get_raw_directories_main'
   if [[ $list_local -eq 1 ]]; then
     local zt_raw_directories_function='zt_get_raw_directories_all'
