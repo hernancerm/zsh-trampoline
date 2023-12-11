@@ -112,5 +112,5 @@
   run gawk -i trampoline.gawk '{ printf zt::trim($0)}' <<< "$string"
   # verify
   assert $state equals 0
-  assert "$output" same_as "this  is some   text"
+  assert "$output" same_as 'this  is some   text'
 }

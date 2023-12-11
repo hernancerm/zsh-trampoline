@@ -2,7 +2,7 @@
 
 1. Install the requirements listed in [Requirements](#requirements).
 2. Follow the instructions in the section [Installation](#installation).
-3. Add your configuration file as described in [Configuration](#configuration).
+3. Add your configuration file as described in [Configuration file](#configuration-file).
 
 # Requirements
 
@@ -69,12 +69,14 @@ The CSV file is required to be created by the user. Regarding the env variables,
 values are provided. Only override these if you prefer something different from the
 defaults.
 
-## 1. Configuration file `config.csv`
+## Configuration file
 
-This CSV file is searched in the directory `$XDG_CONFIG_HOME/zt`. As a fallback, it’s
-searched in `~/.config/zt` when the environment variable `$XDG_CONFIG_HOME` is not set.
-The row format of the file is as shown below. Conceptually, each row represents a
-directory that can be jumped to, and each directory can have metadata associated with it.
+The `config.csv` file is where the available directories to jump to are defined.
+
+This CSV config file is searched in the directory `$XDG_CONFIG_HOME/zt`. When the
+environment variable `$XDG_CONFIG_HOME` is not set, it's searched in `~/.config/zt`. The
+row format of the file is as shown below. Conceptually, each row represents a directory
+that can be jumped to, and each directory can have metadata associated to it.
 
 ```text
 {path}, {description}, {expand}
@@ -125,7 +127,7 @@ In addition to `config.csv`, a second file can be provided following the same fo
 `config_local.csv`. When listing the directories to select a jump location, the contents
 of the latter file may be appended to the former file.
 
-## 2. Environment variables
+## Environment variables
 
 <table>
 <thead>
