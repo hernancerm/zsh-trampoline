@@ -92,3 +92,15 @@
   assert $state equals 0
   assert "$output" same_as "$path_expected"
 }
+
+@test 'zt_get_field_from_pretty gets path on short format with custom decorator' {
+  # setup
+  export ZT_DIRECTORY_DECORATOR='+'
+  local pretty_line='+/tmp/dir'
+  local path_expected='/tmp/dir'
+  # exercise
+  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as "$path_expected"
+}

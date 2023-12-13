@@ -55,3 +55,23 @@
   assert "${lines[4]}" same_as '/tmp/ldir1'
   assert "${lines[5]}" same_as '/tmp/ldir2'
 }
+
+@test 'zt_get_raw_directories_function returns zt_get_raw_directories_all' {
+  # setup
+  export ZT_LIST_DIRECTORIES_LOCAL=1
+  # exercise
+  run zt_get_raw_directories_function
+  # verify
+  assert $state equals 0
+  assert "$output" same_as 'zt_get_raw_directories_all'
+}
+
+@test 'zt_get_raw_directories_function returns zt_get_raw_directories_main' {
+  # setup
+  export ZT_LIST_DIRECTORIES_LOCAL=0
+  # exercise
+  run zt_get_raw_directories_function
+  # verify
+  assert $state equals 0
+  assert "$output" same_as 'zt_get_raw_directories_main'
+}
