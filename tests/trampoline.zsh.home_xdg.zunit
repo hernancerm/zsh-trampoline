@@ -12,21 +12,17 @@
 }
 
 @test 'zt_get_configuration_file_path gets main xdg' {
-  # setup
-  local path_expected="$HOME/$uuid/zt/config.csv"
   # exercise
   run zt_get_configuration_file_path 'main'
   # verify
   assert $state equals 0
-  assert "$output" same_as "$path_expected"
+  assert "$output" same_as "$HOME/$uuid/zt/config.csv"
 }
 
 @test 'zt_get_configuration_file_path gets local xdg' {
-  # setup
-  local path_expected="$HOME/$uuid/zt/config_local.csv"
   # exercise
   run zt_get_configuration_file_path 'local'
   # verify
   assert $state equals 0
-  assert "$output" same_as "$path_expected"
+  assert "$output" same_as "$HOME/$uuid/zt/config_local.csv"
 }
