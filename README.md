@@ -1,10 +1,12 @@
-# Quick start
+# zsh-trampoline
+
+## Quick start
 
 1. Install the requirements listed in [Requirements](#requirements).
 2. Follow the instructions in the section [Installation](#installation).
 3. Add your configuration file as described in [Configuration file](#configuration-file).
 
-# Requirements
+## Requirements
 
 - [Gawk](https://www.gnu.org/software/gawk/) 4.1 or newer.
 - A recent version of [fzf](https://github.com/junegunn/fzf).
@@ -16,7 +18,7 @@ On macOS, the requirements can be installed using [Homebrew](https://brew.sh/):
 brew install gawk fzf
 ```
 
-# Installation
+## Installation
 
 To download and source the plugin, use your favorite plugin manager. For example, use
 [Sheldon](https://github.com/rossmacarthur/sheldon):
@@ -48,7 +50,7 @@ function zvm_after_init {
 }
 ```
 
-# Configuration
+## Configuration
 
 The configuration for zsh-trampoline is provided in two places:
 
@@ -59,7 +61,7 @@ The CSV file is required to be created by the user. Regarding the env variables,
 values are provided. Only override these if you prefer something different from the
 defaults.
 
-## Configuration file
+### Configuration file
 
 The `config.csv` file is where the available directories to jump to are defined.
 
@@ -120,7 +122,7 @@ In addition to `config.csv`, a second file, `config_local.csv`, may be provided 
 same directory. The conents of the second file are expected to be of the same format as
 that of the first file.
 
-## Environment variables
+### Environment variables
 
 <table>
 <thead>
@@ -157,3 +159,8 @@ Key sequence to press to list directories in fzf. By default, it’s <kbd>ctrl+j
 </tr>
 </tbody>
 </table>
+
+## Similar projects
+
+- <https://github.com/wting/autojump>
+- <https://github.com/agkozak/zsh-z>
