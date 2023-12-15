@@ -8,7 +8,7 @@
 
 - [Gawk](https://www.gnu.org/software/gawk/) 4.1 or newer.
 - A recent version of [fzf](https://github.com/junegunn/fzf).
-- Zsh as your shell (of course).
+- Zsh as your shell.
 
 On macOS, the requirements can be installed using [Homebrew](https://brew.sh/):
 
@@ -31,12 +31,15 @@ github = "HerCerM/zsh-trampoline"
 The plugin provides two Zsh functions for setup which are meant to be called in the
 `.zshrc`. Only one function needs to be called depending on the following criteria:
 
-1. `zt_setup_widget_jump_to_directory`: When *not* using the plugin
+1. `zt_zvm_setup_widget_jump_to_directory`: When using the plugin
 [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode).
 
-2. `zt_zvm_setup_widget_jump_to_directory`: When using the plugin zsh-vi-mode.
+2. `zt_setup_widget_jump_to_directory`: When not using the plugin zsh-vi-mode.
 
-In case of using the second function, do the call inside of `zvm_after_init`, like this:
+When using either the first or the second function, do the call after the zsh-trampoline
+plugin is sourced. For example, for Sheldon that is after `eval "$(sheldon source)"`.
+Additionally, when using the first function, do the call inside of `zvm_after_init`, like
+this:
 
 ```sh
 function zvm_after_init {
@@ -44,19 +47,6 @@ function zvm_after_init {
   zt_zvm_setup_widget_jump_to_directory
 }
 ```
-
-<table>
-<tbody>
-<tr>
-<td>ℹ️</td>
-<td>
-When using either the first or the second function, do the call after the zsh-trampoline
-plugin is sourced. For example, for Sheldon that is after
-<code>eval "$(sheldon source)"</code>.
-</td>
-</tr>
-</tbody>
-</table>
 
 # Configuration
 
@@ -114,18 +104,21 @@ Whether to list all level-1 subdirectories. To enable set to <code>true</code>.
 </tbody>
 </table>
 
-Example of valid contents of a file `~/.config/zt/config.csv`. Notice that spaces for
-padding are allowed, but are not required.
+Example of valid contents of a file `config.csv`. Notice that spaces for padding are
+allowed, but are not required.
 
 ```text
-~/dev/gc                      ,Git cloned repos not mine.  ,true
-~/dev/temp                    ,Temporary files.
-~/.local/share/sheldon/repos
+~/dev/gc     , Git cloned repos not mine.   , true
+~/dev/gr     , Git my remote-backed repos.  , true
+~/dev/spub   , Scripts public.
+~/dev/spri   , Scripts private.
+~/.dotfiles  , Configuration files.
+~/dev/temp
 ```
 
-In addition to `config.csv`, a second file can be provided following the same format,
-`config_local.csv`. When listing the directories to select a jump location, the contents
-of the latter file may be appended to the former file.
+In addition to `config.csv`, a second file, `config_local.csv`, may be provided in the
+same directory. The conents of the second file are expected to be of the same format as
+that of the first file.
 
 ## Environment variables
 
@@ -150,7 +143,7 @@ selection through fzf by allowing to exclude the expanded directories.
 <td><code>0</code> or<code>1</code></td><td><code>1</code></td>
 <td>
 Whether to list directories listed in <code>config_local.csv</code>. By default, all
-directories are listed.
+configured directories are listed.
 </td>
 </tr>
 <tr>
