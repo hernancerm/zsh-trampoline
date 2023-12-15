@@ -7,7 +7,7 @@
 
 @test 'zt_get_field_from_raw gets path' {
   # setup
-  local raw_line='/tmp/dir, Test directory., true'
+  local raw_line='/tmp/dir,Test directory.,true'
   # exercise
   run zt_get_field_from_raw 'path' <<< "$raw_line"
   # verify
@@ -17,7 +17,7 @@
 
 @test 'zt_get_field_from_raw gets description' {
   # setup
-  local raw_line='/tmp/dir, Test directory., true'
+  local raw_line='/tmp/dir,Test directory.,true'
   # exercise
   run zt_get_field_from_raw 'description' <<< "$raw_line"
   # verify
@@ -27,12 +27,22 @@
 
 @test 'zt_get_field_from_raw gets expand' {
   # setup
-  local raw_line='/tmp/dir, Test directory., true'
+  local raw_line='/tmp/dir,Test directory.,true'
   # exercise
   run zt_get_field_from_raw 'expand' <<< "$raw_line"
   # verify
   assert $state equals 0
   assert "$output" same_as 'true'
+}
+
+@test 'zt_get_field_from_raw gets path given only that' {
+  # setup
+  local raw_line='/tmp/dir'
+  # exercise
+  run zt_get_field_from_raw 'path' <<< "$raw_line"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as '/tmp/dir'
 }
 
 @test 'zt_get_field_from_raw gets empty description' {
@@ -53,6 +63,36 @@
   # verify
   assert $state equals 0
   assert "$output" same_as ''
+}
+
+@test 'zt_get_field_from_raw gets path trimmed whitespace' {
+  # setup
+  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
+  # exercise
+  run zt_get_field_from_raw 'path' <<< "$raw_line"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as '/tmp/dir'
+}
+
+@test 'zt_get_field_from_raw gets description trimmed whitespace' {
+  # setup
+  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
+  # exercise
+  run zt_get_field_from_raw 'description' <<< "$raw_line"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as 'Test directory.'
+}
+
+@test 'zt_get_field_from_raw gets expand trimmed whitespace' {
+  # setup
+  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
+  # exercise
+  run zt_get_field_from_raw 'expand' <<< "$raw_line"
+  # verify
+  assert $state equals 0
+  assert "$output" same_as 'true'
 }
 
 @test 'zt_get_field_from_pretty gets path on long format' {
