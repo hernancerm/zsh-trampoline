@@ -1,0 +1,5 @@
+shell = "zsh"
+
+[plugins.poc-zsh-plugin]
+github = "HerCerM/poc-zsh-plugin"
+branch = "zt"

@@ -135,7 +135,7 @@ function zt_widget_jump_to_directory {
   local zt_raw_directories_function="$(zt_get_raw_directories_function)"
   local selected_directory="$(eval $zt_raw_directories_function \
       | zt_pretty_print \
-      | fzf --height=~55% --tiebreak=index \
+      | fzf --tiebreak=index \
       | zt_get_field_from_pretty 'path')"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
