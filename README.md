@@ -9,7 +9,7 @@
 ## Requirements
 
 - [Gawk](https://www.gnu.org/software/gawk/) 4.1 or newer.
-- A recent version of [fzf](https://github.com/junegunn/fzf).
+- [fzf](https://github.com/junegunn/fzf) 0.45 or newer.
 - Zsh as your shell.
 
 On macOS, the requirements can be installed using [Homebrew](https://brew.sh/):
@@ -154,5 +154,6 @@ Key sequence to press to list directories in fzf. By default, it’s <kbd>ctrl+j
 
 ## Similar projects
 
+- <https://github.com/ajeetdsouza/zoxide>
 - <https://github.com/wting/autojump>
 - <https://github.com/agkozak/zsh-z>
