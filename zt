@@ -1,12 +1,10 @@
-# @param $1 Field name, options: 'path', 'description', 'expand'.
-function get_field_index {
-  local index
-  case "$1" in
-    path)        index=1;;
-    description) index=2;;
-    expand)      index=3;;
-  esac
-  echo $index
+#!/usr/bin/env zsh
+
+# @param $1 Configuration file path.
+function validate_main_configuration_file_path {
+  if ! [[ -f "$(get_configuration_file_path 'main')" ]]; then
+    return 1
+  fi
 }
 
 # @param $1 Configuration file: 'main', 'local'.
@@ -46,12 +44,16 @@ function get_raw_directories_function {
   echo "$raw_directories_function"
 }
 
-# @stdin Raw lines from the directories config file.
-# @param $1 Name of field to retrieve: `path`, `description` or `expand`.
+# @stdin Prettified lines of lines from the directories config file.
+# @param $1 Name of field to retrieve: `path` or `description`.
 # @return string The trimmed value of the field.
-function get_field_from_raw {
-  gawk -F',' -i trampoline.gawk -v field_index="$(get_field_index $1)" '{
-    print zt::trim($field_index) }'
+function get_path_from_pretty {
+  gawk -i trampoline.gawk '{
+    split($0, fields_array, /\-\-/)
+    path = zt::trim(fields_array[1])
+    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
+    print(path)
+  }'
 }
 
 # Pretty print the provided lines of raw lines from the directories config file.
@@ -61,12 +63,12 @@ function get_field_from_raw {
 function pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
-      | get_field_from_raw 'path' \
-      | gawk '{ print(length($0)) }' \
+      | gawk -F, '{ print(length($1)) }' \
       | sort -rn \
       | head -1)"
-  echo "$stdin" | gawk -i trampoline.gawk -v longest_path_length=$longest_path_length -v expand=$1 '{
-      zt::pretty_print($0, longest_path_length, expand) }'
+  echo "$stdin" | gawk -i trampoline.gawk \
+      -v longest_path_length=$longest_path_length -v expand=$1 '{
+          zt::pretty_print($0, longest_path_length, expand) }'
 }
 
 eval "$@"

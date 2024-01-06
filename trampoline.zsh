@@ -2,10 +2,13 @@
 # https://github.com/HerCerM/zsh-trampoline
 
 # Do not source this script multiple times.
-command -v zt_version > /dev/null && return
+[[ -n "$ZT_VERSION" ]] && return
 
 # Configuration{{{
 # ---
+
+# Plugin version.
+export ZT_VERSION='0.1.0-SNAPSHOT'
 
 # Select the config home location.
 export ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
@@ -14,6 +17,7 @@ export ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
 # Make the Gawk library available.
 export AWKPATH="$AWKPATH:${0:a:h}"
 
+# Make the zt script available in PATH.
 export PATH="$PATH:${0:a:h}"
 
 # Global configuration.
@@ -22,42 +26,12 @@ export ZT_LIST_DIRECTORIES_LOCAL=1
 export ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
 # }}}
 
-# Functions{{{
-# ---
-
-# Get the script version.
-function zt_version {
-  echo '0.1.0-SNAPSHOT'
-}
-
-# @param $1 Configuration file path.
-function zt_validate_main_configuration_file_path {
-  if ! [[ -f "$(zt get_configuration_file_path 'main')" ]]; then
-    return 1
-  fi
-}
-
-# @stdin Prettified lines of lines from the directories config file.
-# @param $1 Name of field to retrieve: `path` or `description`.
-# @return string The trimmed value of the field.
-function zt_get_field_from_pretty {
-  gawk -i trampoline.gawk -v field_index="$(zt get_field_index $1)" '{
-    split($0, fields_array, /\-\-/)
-    field_value = zt::trim(fields_array[field_index])
-    if (field_index == 1) {
-      sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", field_value)
-    }
-    print(field_value)
-  }'
-}
-# }}}
-
 # Widgets{{{
 # ---
 
 # List directories in fzf and cd to the selected directory.
 function zt_widget_jump_to_directory {
-  zt_validate_main_configuration_file_path
+  zt validate_main_configuration_file_path
   if [[ $? -ne 0 ]]; then
     printf "Missing configuration file: $(zt get_configuration_file_path 'main')" 1>&2
     zle accept-line
@@ -66,10 +40,13 @@ function zt_widget_jump_to_directory {
   local zt_raw_directories_function="$(zt get_raw_directories_function)"
   local selected_directory="$(zt get_raw_directories_main \
       | zt pretty_print true \
-      | fzf --tiebreak=index --prompt "< " --bind "*:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
-          echo 'change-prompt(< )+reload(zt get_raw_directories_main | zt pretty_print true)' ||
-          echo 'change-prompt(> )+reload(zt get_raw_directories_main | zt pretty_print false)'" \
-      | zt_get_field_from_pretty 'path')"
+      | fzf --tiebreak=index --prompt "< " \
+          --bind "*:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
+          echo 'change-prompt(< )+reload(zt $zt_raw_directories_function \
+              | zt pretty_print true)' ||
+          echo 'change-prompt(> )+reload(zt $zt_raw_directories_function \
+              | zt pretty_print false)'" \
+      | zt get_path_from_pretty)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
     return
