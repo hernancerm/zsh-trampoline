@@ -1,0 +1,72 @@
+# @param $1 Field name, options: 'path', 'description', 'expand'.
+function get_field_index {
+  local index
+  case "$1" in
+    path)        index=1;;
+    description) index=2;;
+    expand)      index=3;;
+  esac
+  echo $index
+}
+
+# @param $1 Configuration file: 'main', 'local'.
+function get_configuration_file_path {
+  case "$1" in
+    'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/config.csv");;
+    'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/config_local.csv");;
+  esac
+  echo "$config_file"
+}
+
+# @return string Main directories as-are, no transformations applied to contents.
+#         It is required to have this file.
+function get_raw_directories_main {
+  cat $(get_configuration_file_path 'main')
+}
+
+# @return string Local directories as-are, no transformations applied to contents.
+#         It is not required to have this file.
+function get_raw_directories_local {
+  cat $(get_configuration_file_path 'local') 2> /dev/null
+}
+
+# @return string All directories as-are, no transformations applied to the files.
+#         (the public directories are listed first, then the private ones).
+function get_raw_directories_all {
+  get_raw_directories_main && get_raw_directories_local
+}
+
+# @return string Function name which when invoked returns a list of raw directories.
+function get_raw_directories_function {
+  local list_local=$ZT_LIST_DIRECTORIES_LOCAL
+  local raw_directories_function='get_raw_directories_main'
+  if [[ $list_local -eq 1 ]]; then
+    local raw_directories_function='get_raw_directories_all'
+  fi
+  echo "$raw_directories_function"
+}
+
+# @stdin Raw lines from the directories config file.
+# @param $1 Name of field to retrieve: `path`, `description` or `expand`.
+# @return string The trimmed value of the field.
+function get_field_from_raw {
+  gawk -F',' -i trampoline.gawk -v field_index="$(get_field_index $1)" '{
+    print zt::trim($field_index) }'
+}
+
+# Pretty print the provided lines of raw lines from the directories config file.
+#
+# @stdin Raw lines from the directories config file.
+# @return string Pretty-printed directories.
+function pretty_print {
+  local stdin="$(cat -)"
+  local longest_path_length="$(echo "$stdin" \
+      | get_field_from_raw 'path' \
+      | gawk '{ print(length($0)) }' \
+      | sort -rn \
+      | head -1)"
+  echo "$stdin" | gawk -i trampoline.gawk -v longest_path_length=$longest_path_length -v expand=$1 '{
+      zt::pretty_print($0, longest_path_length, expand) }'
+}
+
+eval "$@"

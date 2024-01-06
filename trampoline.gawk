@@ -5,7 +5,7 @@
 # @param raw_dir string raw line from directories config file.
 # @param longest_path_length integer lenght of longest path in the dirs config file.
 # @return void
-function pretty_print(raw_dir, longest_path_length,
+function pretty_print(raw_dir, longest_path_length, expand,
       _raw_dir_array, _path_padded, _description_formatted) {
   split(raw_dir, _raw_dir_array, /,/)
   # Print directory.
@@ -20,7 +20,7 @@ function pretty_print(raw_dir, longest_path_length,
            _path_padded, _description_formatted)
   }
   # Print expanded directories.
-  if (trim(_raw_dir_array[3]) == "true") {
+  if (expand == "true" && trim(_raw_dir_array[3]) == "true") {
     system("find " trim(_raw_dir_array[1]) " -maxdepth 1 -type d \
         | sed '1d' \
         | xargs realpath \
