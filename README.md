@@ -133,14 +133,6 @@ that of the first file.
 </thead>
 <tbody>
 <tr>
-<td><code>ZT_DIRECTORY_DECORATOR</code></td>
-<td>Single character</td><td><code>*</code></td>
-<td>
-Prefix of the <code>{path}</code> for every row in the CSV config files. This eases
-selection through fzf by allowing to exclude the expanded directories.
-</td>
-</tr>
-<tr>
 <td><code>ZT_LIST_DIRECTORIES_LOCAL</code></td>
 <td><code>0</code> or<code>1</code></td><td><code>1</code></td>
 <td>
