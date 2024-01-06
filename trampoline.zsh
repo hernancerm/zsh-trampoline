@@ -38,7 +38,7 @@ function zt_widget_jump_to_directory {
     return 1
   fi
   local zt_raw_directories_function="$(zt get_raw_directories_function)"
-  local selected_directory="$(zt get_raw_directories_main \
+  local selected_directory="$(zt $zt_raw_directories_function \
       | zt pretty_print true \
       | fzf --tiebreak=index --prompt "< " \
           --bind "*:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
