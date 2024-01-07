@@ -38,7 +38,8 @@
     ~/$uuid/dir2
     ~/$uuid/dir3"
   # exercise
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  run gawk -i trampoline.gawk '{
+      printf zt::pretty_print($0, 43, "true") }' <<< "$dirs_raw"
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -55,7 +56,8 @@
     ~/$uuid/dir2, Temp dir 2.
     ~/$uuid/dir3, Temp dir 3."
   # exercise
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  run gawk -i trampoline.gawk '{
+      printf zt::pretty_print($0, 43, "true") }' <<< "$dirs_raw"
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -72,7 +74,8 @@
     ~/$uuid/dir2,, true
     ~/$uuid/dir3,, true"
   # exercise
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  run gawk -i trampoline.gawk '{
+      printf zt::pretty_print($0, 43, "true") }' <<< "$dirs_raw"
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -85,6 +88,24 @@
   assert "${lines[6]}" same_as " ~/$uuid/dir3/dir"
 }
 
+@test 'pretty_print lists directories with expand blocked' {
+  # setup
+  local dirs_raw="\
+    ~/$uuid/dir1,, true
+    ~/$uuid/dir2,, true
+    ~/$uuid/dir3,, true"
+  # exercise
+  run gawk -i trampoline.gawk '{
+      printf zt::pretty_print($0, 43, "false") }' <<< "$dirs_raw"
+  # verify
+  assert $state equals 0
+  assert "$output" is_not_empty
+  assert ${#lines[@]} equals 3
+  assert "${lines[1]}" same_as "*~/$uuid/dir1"
+  assert "${lines[2]}" same_as "*~/$uuid/dir2"
+  assert "${lines[3]}" same_as "*~/$uuid/dir3"
+}
+
 @test 'pretty_print lists directories with descriptions and expand' {
   # setup
   local dirs_raw="\
@@ -92,7 +113,8 @@
     ~/$uuid/dir2, Test dir 2., true
     ~/$uuid/dir3, Test dir 3., true"
   # exercise
-  run gawk -i trampoline.gawk '{ printf zt::pretty_print($0, 43) }' <<< "$dirs_raw"
+  run gawk -i trampoline.gawk '{
+      printf zt::pretty_print($0, 43, "true") }' <<< "$dirs_raw"
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -109,7 +131,7 @@
   # setup
   local string='  this  is some   text      '
   # exercise
-  run gawk -i trampoline.gawk '{ printf zt::trim($0)}' <<< "$string"
+  run gawk -i trampoline.gawk '{ printf zt::trim($0) }' <<< "$string"
   # verify
   assert $state equals 0
   assert "$output" same_as 'this  is some   text'

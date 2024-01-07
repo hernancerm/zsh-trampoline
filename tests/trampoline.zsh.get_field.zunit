@@ -1,136 +1,24 @@
 #!/usr/bin/env zunit
 
 @setup {
-  export ZT_DIRECTORY_DECORATOR='*'
   load '../trampoline.zsh'
 }
 
-@test 'zt_get_field_from_raw gets path' {
-  # setup
-  local raw_line='/tmp/dir,Test directory.,true'
-  # exercise
-  run zt_get_field_from_raw 'path' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as '/tmp/dir'
-}
-
-@test 'zt_get_field_from_raw gets description' {
-  # setup
-  local raw_line='/tmp/dir,Test directory.,true'
-  # exercise
-  run zt_get_field_from_raw 'description' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as 'Test directory.'
-}
-
-@test 'zt_get_field_from_raw gets expand' {
-  # setup
-  local raw_line='/tmp/dir,Test directory.,true'
-  # exercise
-  run zt_get_field_from_raw 'expand' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as 'true'
-}
-
-@test 'zt_get_field_from_raw gets path given only that' {
-  # setup
-  local raw_line='/tmp/dir'
-  # exercise
-  run zt_get_field_from_raw 'path' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as '/tmp/dir'
-}
-
-@test 'zt_get_field_from_raw gets empty description' {
-  # setup
-  local raw_line='/tmp/dir'
-  # exercise
-  run zt_get_field_from_raw 'description' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as ''
-}
-
-@test 'zt_get_field_from_raw gets empty expand' {
-  # setup
-  local raw_line='/tmp/dir'
-  # exercise
-  run zt_get_field_from_raw 'expand' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as ''
-}
-
-@test 'zt_get_field_from_raw gets path trimmed whitespace' {
-  # setup
-  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
-  # exercise
-  run zt_get_field_from_raw 'path' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as '/tmp/dir'
-}
-
-@test 'zt_get_field_from_raw gets description trimmed whitespace' {
-  # setup
-  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
-  # exercise
-  run zt_get_field_from_raw 'description' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as 'Test directory.'
-}
-
-@test 'zt_get_field_from_raw gets expand trimmed whitespace' {
-  # setup
-  local raw_line='   /tmp/dir   ,   Test directory.   ,   true   '
-  # exercise
-  run zt_get_field_from_raw 'expand' <<< "$raw_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as 'true'
-}
-
-@test 'zt_get_field_from_pretty gets path on long format' {
-  # setup
-  local pretty_line='*/tmp/dir    -- Test directory.'
-  # exercise
-  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as '/tmp/dir'
-}
-
-@test 'zt_get_field_from_pretty gets description on long format' {
-  # setup
-  local pretty_line='*/tmp/dir    -- Test directory.'
-  # exercise
-  run zt_get_field_from_pretty 'description' <<< "$pretty_line"
-  # verify
-  assert $state equals 0
-  assert "$output" same_as 'Test directory.'
-}
-
-@test 'zt_get_field_from_pretty gets path on short format' {
+@test 'zt get_path_from_pretty gets path on short format' {
   # setup
   local pretty_line='*/tmp/dir'
   # exercise
-  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
+  run zt get_path_from_pretty <<< "$pretty_line"
   # verify
   assert $state equals 0
   assert "$output" same_as '/tmp/dir'
 }
 
-@test 'zt_get_field_from_pretty gets path on short format with custom decorator' {
+@test 'zt get_path_from_pretty gets path on long format' {
   # setup
-  export ZT_DIRECTORY_DECORATOR='+'
-  local pretty_line='+/tmp/dir'
+  local pretty_line='*/tmp/dir    -- Test directory.'
   # exercise
-  run zt_get_field_from_pretty 'path' <<< "$pretty_line"
+  run zt get_path_from_pretty <<< "$pretty_line"
   # verify
   assert $state equals 0
   assert "$output" same_as '/tmp/dir'

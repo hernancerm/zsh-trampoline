@@ -45,7 +45,6 @@ function get_raw_directories_function {
 }
 
 # @stdin Prettified lines of lines from the directories config file.
-# @param $1 Name of field to retrieve: `path` or `description`.
 # @return string The trimmed value of the field.
 function get_path_from_pretty {
   gawk -i trampoline.gawk '{
@@ -63,7 +62,7 @@ function get_path_from_pretty {
 function pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
-      | gawk -F, '{ print(length($1)) }' \
+      | gawk -i trampoline.gawk -F, '{ print(length(zt::trim($1))) }' \
       | sort -rn \
       | head -1)"
   echo "$stdin" | gawk -i trampoline.gawk \
