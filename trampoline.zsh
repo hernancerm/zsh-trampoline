@@ -2,13 +2,14 @@
 # https://github.com/HerCerM/zsh-trampoline
 
 # Do not source this script multiple times.
-[[ -n "$ZT_VERSION" ]] && return
+command -v zt_version > /dev/null && return
 
 # Configuration{{{
 # ---
 
-# Plugin version.
-export ZT_VERSION='0.1.0-SNAPSHOT'
+function zt_version {
+  echo '0.1.0-SNAPSHOT'
+}
 
 # Select the config home location.
 export ZT_CONFIG_HOME="$(eval echo ${XDG_CONFIG_HOME:-'~/.config'}/zt \
