@@ -2,8 +2,9 @@
 
 # Pretty-print a raw line from the directories config file.
 #
-# @param raw_dir string raw line from directories config file.
-# @param longest_path_length integer lenght of longest path in the dirs config file.
+# @param raw_dir string Raw line from directories config file.
+# @param longest_path_length integer Lenght of longest path in the dirs config file.
+# @param expand string A value different from "true" prevents directory expansion.
 # @return void
 function pretty_print(raw_dir, longest_path_length, expand,
       _raw_dir_array, _path_padded, _description_formatted) {
@@ -31,7 +32,7 @@ function pretty_print(raw_dir, longest_path_length, expand,
 }
 
 # @param string string.
-# @return string trimmed string.
+# @return string Trimmed string.
 function trim(string) {
   return awk::gensub(/^\s+|\s+$/, "", "g", string);
 }
