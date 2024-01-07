@@ -71,4 +71,5 @@ function pretty_print {
           zt::pretty_print($0, longest_path_length, expand) }'
 }
 
+# Provide passthrough access to the functions defined in this script.
 eval "$@"

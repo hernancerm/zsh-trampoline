@@ -4,7 +4,7 @@
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
 
-# Configuration{{{
+# Configuration
 # ---
 
 function zt_version {
@@ -25,9 +25,8 @@ export PATH="$PATH:${0:a:h}"
 export ZT_LIST_DIRECTORIES_LOCAL=1
 export ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
 typeset -gr ZT_DIRECTORY_DECORATOR='*'
-# }}}
 
-# Widgets{{{
+# Widgets
 # ---
 
 # List directories in fzf and cd to the selected directory.
@@ -70,6 +69,3 @@ function zt_zvm_setup_widget_jump_to_directory {
   zvm_define_widget zt_widget_jump_to_directory
   zvm_bindkey viins $ZT_KEY_MAP_JUMP_TO_DIRECTORY zt_widget_jump_to_directory
 }
-# }}}
-
-# vim: foldmethod=marker foldlevel=0
