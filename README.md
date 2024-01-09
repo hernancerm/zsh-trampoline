@@ -2,9 +2,17 @@
 
 ## Quick start
 
+Please go through the below steps to be able to jump to directories using `ctrl+j`:
+
 1. Install the requirements listed in [Requirements](#requirements).
 2. Follow the instructions in the section [Installation](#installation).
 3. Add your configuration file as described in [Configuration file](#configuration-file).
+4. To get the same behavior from fzf as in the demo GIF, export the below env var before
+   invoking the plugin.
+
+```bash
+export FZF_DEFAULT_OPTS='--layout=reverse --height=~55%'
+```
 
 ## Requirements
 
