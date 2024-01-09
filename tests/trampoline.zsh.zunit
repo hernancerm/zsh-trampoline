@@ -21,4 +21,5 @@
   assert "$ZT_DIRECTORY_DECORATOR" is_not_empty
   assert "$ZT_LIST_DIRECTORIES_LOCAL" is_not_empty
   assert "$ZT_KEY_MAP_JUMP_TO_DIRECTORY" is_not_empty
+  assert "$ZT_KEY_MAP_TOGGLE_EXPAND" is_not_empty
 }

@@ -25,6 +25,7 @@ export PATH="$PATH:${0:a:h}"
 export ZT_DIRECTORY_DECORATOR='*'
 export ZT_LIST_DIRECTORIES_LOCAL=1
 export ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
+export ZT_KEY_MAP_TOGGLE_EXPAND=$ZT_DIRECTORY_DECORATOR
 
 # Widgets
 # ---
@@ -41,7 +42,7 @@ function zt_widget_jump_to_directory {
   local selected_directory="$(zt $zt_raw_directories_function \
       | zt pretty_print true \
       | fzf --tiebreak=index --prompt "< " \
-          --bind "*:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
+          --bind "${ZT_KEY_MAP_TOGGLE_EXPAND}:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
           echo 'change-prompt(< )+reload(zt $zt_raw_directories_function \
               | zt pretty_print true)' ||
           echo 'change-prompt(> )+reload(zt $zt_raw_directories_function \

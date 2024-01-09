@@ -133,20 +133,29 @@ that of the first file.
 </thead>
 <tbody>
 <tr>
-<td><code>ZT_LIST_DIRECTORIES_LOCAL</code></td>
-<td><code>0</code> or<code>1</code></td><td><code>1</code></td>
-<td>
-Whether to list directories listed in <code>config_local.csv</code>. By default, all
-configured directories are listed.
-</td>
-</tr>
-<tr>
 <td><code>ZT_KEY_MAP_JUMP_TO_DIRECTORY</code></td>
 <td>
 <a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
-<code>bindkey</code> key map</a></td> <td><code>^j</code></td>
+<code>bindkey</code> key map</a></td><td><code>^j</code></td>
 <td>
 Key sequence to press to list directories in fzf. By default, it’s <kbd>ctrl+j</kbd>.
+</td>
+</tr>
+<tr>
+<td><code>ZT_KEY_MAP_TOGGLE_EXPAND</code></td>
+<td>fzf key (refer to <code>man fzf</code>)</td><td><code>*</code></td>
+<td>
+Key sequence to press to toggle expanding directories which have a <code>true</code> value
+for the column <code>{expand}</code>. This allows seeing only the directories explicitly
+  listed in the config file. By default, it’s <kbd>*</kbd>.
+</td>
+</tr>
+<tr>
+<td><code>ZT_LIST_DIRECTORIES_LOCAL</code></td>
+<td><code>0</code> or <code>1</code></td><td><code>1</code></td>
+<td>
+Whether to list directories listed in <code>config_local.csv</code>. By default, all
+configured directories are listed.
 </td>
 </tr>
 </tbody>
