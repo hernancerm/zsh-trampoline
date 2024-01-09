@@ -17,7 +17,7 @@
   mkdir -p "$HOME/$uuid/dir2" && touch "$HOME/$uuid/dir2/file.txt"
   mkdir -p "$HOME/$uuid/dir3/dir" && touch "$HOME/$uuid/dir3/file.txt"
   export ZT_DIRECTORY_DECORATOR='*'
-  load '../trampoline.zsh'
+  load '../trampoline.plugin.zsh'
 }
 
 @teardown {

@@ -1,10 +1,10 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load '../trampoline.zsh'
+  load '../trampoline.plugin.zsh'
 }
 
-@test 'version is set' {
+@test 'plugin version is set' {
   # exercise
   run zt_version
   # verify

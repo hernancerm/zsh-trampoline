@@ -1,7 +1,7 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load '../trampoline.zsh'
+  load '../trampoline.plugin.zsh'
 }
 
 @test 'zt get_path_from_pretty gets path on short format' {

@@ -4,24 +4,24 @@
   load './_support/uuid.zsh'
   export XDG_CONFIG_HOME="$HOME/$uuid"
   mkdir -p "$XDG_CONFIG_HOME"
-  load '../trampoline.zsh'
+  load '../trampoline.plugin.zsh'
 }
 
 @teardown {
   rmdir "$HOME/$uuid"
 }
 
-@test 'zt_get_configuration_file_path gets main xdg' {
+@test 'zt get_configuration_file_path gets main xdg' {
   # exercise
-  run zt_get_configuration_file_path 'main'
+  run zt get_configuration_file_path 'main'
   # verify
   assert $state equals 0
   assert "$output" same_as "$HOME/$uuid/zt/config.csv"
 }
 
-@test 'zt_get_configuration_file_path gets local xdg' {
+@test 'zt get_configuration_file_path gets local xdg' {
   # exercise
-  run zt_get_configuration_file_path 'local'
+  run zt get_configuration_file_path 'local'
   # verify
   assert $state equals 0
   assert "$output" same_as "$HOME/$uuid/zt/config_local.csv"

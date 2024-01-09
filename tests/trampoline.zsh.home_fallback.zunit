@@ -2,20 +2,20 @@
 
 @setup {
   unset XDG_CONFIG_HOME
-  load '../trampoline.zsh'
+  load '../trampoline.plugin.zsh'
 }
 
-@test 'zt_get_configuration_file_path gets main fallback' {
+@test 'zt get_configuration_file_path gets main fallback' {
   # exercise
-  run zt_get_configuration_file_path 'main'
+  run zt get_configuration_file_path 'main'
   # verify
   assert $state equals 0
   assert "$output" same_as "$HOME/.config/zt/config.csv"
 }
 
-@test 'zt_get_configuration_file_path gets local fallback' {
+@test 'zt get_configuration_file_path gets local fallback' {
   # exercise
-  run zt_get_configuration_file_path 'local'
+  run zt get_configuration_file_path 'local'
   # verify
   assert $state equals 0
   assert "$output" same_as "$HOME/.config/zt/config_local.csv"
