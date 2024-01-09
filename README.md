@@ -1,18 +1,12 @@
 # zsh-trampoline
 
-## Quick start
+## Usage
 
-Please go through the below steps to be able to jump to directories using `ctrl+j`:
-
-1. Install the requirements listed in [Requirements](#requirements).
-2. Follow the instructions in the section [Installation](#installation).
-3. Add your configuration file as described in [Configuration file](#configuration-file).
-4. To get the same behavior from fzf as in the demo GIF, export the below env var before
-   invoking the plugin.
-
-```bash
-export FZF_DEFAULT_OPTS='--layout=reverse --height=~55%'
-```
+Press <kbd>ctrl+j</kbd> to bring a list of directories to "jump" (`cd`) to. When the list
+is shown, press <kbd>*</kbd> to toggle directory expansion. This is useful when wanting to
+remove expanded directories from the filtered directories. See the `{expand}` column in
+the [config file](#configuration-file). Type your query, press <kbd>enter</kbd>, and
+now you are on a different directory.
 
 ## Requirements
 
@@ -65,7 +59,7 @@ The configuration for zsh-trampoline is provided in two places:
 1. A CSV configuration file.
 2. Environment variables.
 
-The CSV file is required to be created by the user. Regarding the env variables, default
+The CSV file must be created by the user. Regarding the environment variables, default
 values are provided. Only override these if you prefer something different from the
 defaults.
 
@@ -168,6 +162,12 @@ configured directories are listed.
 </tr>
 </tbody>
 </table>
+
+To get the same behavior from fzf as in the demo GIF, set these default options for fzf:
+
+```bash
+export FZF_DEFAULT_OPTS='--layout=reverse --height=~55%'
+```
 
 ## Similar projects
 
