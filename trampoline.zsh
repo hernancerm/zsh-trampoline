@@ -46,7 +46,7 @@ function zt_widget_jump_to_directory {
               | zt pretty_print true)' ||
           echo 'change-prompt(> )+reload(zt $zt_raw_directories_function \
               | zt pretty_print false)'" \
-      | zt get_path_from_pretty)"
+      | zt_get_path_from_pretty)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
     return
@@ -68,4 +68,15 @@ function zt_setup_widget_jump_to_directory {
 function zt_zvm_setup_widget_jump_to_directory {
   zvm_define_widget zt_widget_jump_to_directory
   zvm_bindkey viins $ZT_KEY_MAP_JUMP_TO_DIRECTORY zt_widget_jump_to_directory
+}
+
+# @stdin Prettified lines of lines from the directories config file.
+# @return string The trimmed value of the field.
+function zt_get_path_from_pretty {
+  gawk -i trampoline.gawk '{
+    split($0, fields_array, /\-\-/)
+    path = zt::trim(fields_array[1])
+    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
+    print(path)
+  }'
 }

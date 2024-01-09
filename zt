@@ -44,17 +44,6 @@ function get_raw_directories_function {
   echo "$raw_directories_function"
 }
 
-# @stdin Prettified lines of lines from the directories config file.
-# @return string The trimmed value of the field.
-function get_path_from_pretty {
-  gawk -i trampoline.gawk '{
-    split($0, fields_array, /\-\-/)
-    path = zt::trim(fields_array[1])
-    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
-    print(path)
-  }'
-}
-
 # Pretty print the provided lines of raw lines from the directories config file.
 #
 # @stdin Raw lines from the directories config file.
