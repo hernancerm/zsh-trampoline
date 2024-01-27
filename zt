@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# Used for completions.
+local function_names=''
+
 # @param $1 Configuration file: 'main', 'local'.
 function get_configuration_file_path {
   case "$1" in
@@ -8,6 +11,7 @@ function get_configuration_file_path {
   esac
   echo "$config_file"
 }
+function_names+=' get_configuration_file_path'
 
 # @param $1 Raw directories to return; accepts 'main', 'local' or 'all'.
 function get_raw_directories {
@@ -19,6 +23,7 @@ function get_raw_directories {
     'all') eval "$get_raw_directories_main" && eval "$get_raw_directories_local";;
   esac
 }
+function_names+=' get_raw_directories'
 
 # @stdout Function name with args which when evaluated returns raw directories.
 function get_raw_directories_function {
@@ -29,6 +34,7 @@ function get_raw_directories_function {
   fi
   echo "$raw_directories_function"
 }
+function_names+=' get_raw_directories_function'
 
 # @stdin Raw lines from the directories config file.
 # @stdout Pretty-printed directories.
@@ -42,6 +48,7 @@ function pretty_print {
       -v longest_path_length=$longest_path_length -v expand=$1 '{
           zt::pretty_print($0, longest_path_length, expand) }'
 }
+function_names+=' pretty_print'
 
 # @stdin Prettified lines of lines from the directories config file.
 # @stdout The trimmed value of the field.
@@ -53,6 +60,13 @@ function get_path_from_pretty {
     print(path)
   }'
 }
+function_names+=' get_path_from_pretty'
+
+function reflect_get_function_names {
+  # Use `xargs` to trim whitespace.
+  echo "$(echo $function_names | xargs)"
+}
+function_names+=' reflect_get_function_names'
 
 # Provide passthrough access to the functions defined in this script. Motivation: A
 # simpler way to have these functions exposed is to add them to trampoline.zsh so that
