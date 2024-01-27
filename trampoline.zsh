@@ -32,7 +32,10 @@ export ZT_KEY_MAP_TOGGLE_EXPAND=$ZT_DIRECTORY_DECORATOR
 
 # List directories in fzf and cd to the selected directory.
 function zt_widget_jump_to_directory {
-  zt validate_main_configuration_file_path
+  # Validate main configuration file path.
+  if ! [[ -f "$(zt get_configuration_file_path 'main')" ]]; then
+    return 1
+  fi
   if [[ $? -ne 0 ]]; then
     printf "Missing configuration file: $(zt get_configuration_file_path 'main')" 1>&2
     zle accept-line
@@ -47,7 +50,7 @@ function zt_widget_jump_to_directory {
               | zt pretty_print true)' ||
           echo 'change-prompt(> )+reload(zt $zt_raw_directories_function \
               | zt pretty_print false)'" \
-      | zt_get_path_from_pretty)"
+      | zt get_path_from_pretty)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
     return
@@ -69,15 +72,4 @@ function zt_setup_widget_jump_to_directory {
 function zt_zvm_setup_widget_jump_to_directory {
   zvm_define_widget zt_widget_jump_to_directory
   zvm_bindkey viins $ZT_KEY_MAP_JUMP_TO_DIRECTORY zt_widget_jump_to_directory
-}
-
-# @stdin Prettified lines of lines from the directories config file.
-# @return string The trimmed value of the field.
-function zt_get_path_from_pretty {
-  gawk -i trampoline.gawk '{
-    split($0, fields_array, /\-\-/)
-    path = zt::trim(fields_array[1])
-    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
-    print(path)
-  }'
 }

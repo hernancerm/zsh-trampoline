@@ -1,12 +1,5 @@
 #!/usr/bin/env zsh
 
-# @param $1 Configuration file path.
-function validate_main_configuration_file_path {
-  if ! [[ -f "$(get_configuration_file_path 'main')" ]]; then
-    return 1
-  fi
-}
-
 # @param $1 Configuration file: 'main', 'local'.
 function get_configuration_file_path {
   case "$1" in
@@ -16,38 +9,29 @@ function get_configuration_file_path {
   echo "$config_file"
 }
 
-# @return string Main directories as-are, no transformations applied to contents.
-#         It is required to have this file.
-function get_raw_directories_main {
-  cat $(get_configuration_file_path 'main')
+# @param $1 Raw directories to return; accepts 'main', 'local' or 'all'.
+function get_raw_directories {
+  local get_raw_directories_main="cat $(get_configuration_file_path 'main')"
+  local get_raw_directories_local="cat $(get_configuration_file_path 'local') 2>/dev/null"
+  case "$1" in
+    'main') eval "$get_raw_directories_main";;
+    'local') eval "$get_raw_directories_local";;
+    'all') eval "$get_raw_directories_main" && eval "$get_raw_directories_local";;
+  esac
 }
 
-# @return string Local directories as-are, no transformations applied to contents.
-#         It is not required to have this file.
-function get_raw_directories_local {
-  cat $(get_configuration_file_path 'local') 2> /dev/null
-}
-
-# @return string All directories as-are, no transformations applied to the files.
-#         (the public directories are listed first, then the private ones).
-function get_raw_directories_all {
-  get_raw_directories_main && get_raw_directories_local
-}
-
-# @return string Function name which when invoked returns a list of raw directories.
+# @stdout Function name with args which when evaluated returns raw directories.
 function get_raw_directories_function {
   local list_local=$ZT_LIST_DIRECTORIES_LOCAL
-  local raw_directories_function='get_raw_directories_main'
+  local raw_directories_function='get_raw_directories main'
   if [[ $list_local -eq 1 ]]; then
-    local raw_directories_function='get_raw_directories_all'
+    local raw_directories_function='get_raw_directories all'
   fi
   echo "$raw_directories_function"
 }
 
-# Pretty print the provided lines of raw lines from the directories config file.
-#
 # @stdin Raw lines from the directories config file.
-# @return string Pretty-printed directories.
+# @stdout Pretty-printed directories.
 function pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
@@ -59,5 +43,19 @@ function pretty_print {
           zt::pretty_print($0, longest_path_length, expand) }'
 }
 
-# Provide passthrough access to the functions defined in this script.
+# @stdin Prettified lines of lines from the directories config file.
+# @stdout The trimmed value of the field.
+function get_path_from_pretty {
+  gawk -i trampoline.gawk '{
+    split($0, fields_array, /\-\-/)
+    path = zt::trim(fields_array[1])
+    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
+    print(path)
+  }'
+}
+
+# Provide passthrough access to the functions defined in this script. Motivation: A
+# simpler way to have these functions exposed is to add them to trampoline.zsh so that
+# they get sourced on the plugin bootstrap. However, the functions are not available on
+# the fzf's `reload` action, which is used in the Zsh widget. This solves that issue.
 eval "$@"
