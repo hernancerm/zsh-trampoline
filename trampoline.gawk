@@ -34,7 +34,7 @@ function pretty_print(raw_dir, longest_path_length, expand,
 # @param string string.
 # @return string Trimmed string.
 function trim(string) {
-  return awk::gensub(/^\s+|\s+$/, "", "g", string);
+  return awk::gensub(/^\s+|\s+$/, "", "g", string)
 }
 
 # @param symbol string character to repeat.
