@@ -4,7 +4,7 @@
   load './_support/uuid.zsh'
   export XDG_CONFIG_HOME="$HOME/$uuid"
   mkdir -p "$XDG_CONFIG_HOME"
-  load '../trampoline.plugin.zsh'
+  load '../src/configuration.zsh'
 }
 
 @teardown {

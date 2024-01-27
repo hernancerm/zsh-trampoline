@@ -2,7 +2,7 @@
 
 @setup {
   unset XDG_CONFIG_HOME
-  load '../trampoline.plugin.zsh'
+  load '../src/configuration.zsh'
 }
 
 @test 'zt get_configuration_file_path gets main fallback' {

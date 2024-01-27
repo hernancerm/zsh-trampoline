@@ -1,24 +1,24 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load '../trampoline.plugin.zsh'
+  load '../src/configuration.zsh'
 }
 
-@test 'zt_get_path_from_pretty gets path on short format' {
+@test 'zt get_path_from_pretty gets path on short format' {
   # setup
   local pretty_line='*/tmp/dir'
   # exercise
-  run zt_get_path_from_pretty <<< "$pretty_line"
+  run zt get_path_from_pretty <<< "$pretty_line"
   # verify
   assert $state equals 0
   assert "$output" same_as '/tmp/dir'
 }
 
-@test 'zt_get_path_from_pretty gets path on long format' {
+@test 'zt get_path_from_pretty gets path on long format' {
   # setup
   local pretty_line='*/tmp/dir    -- Test directory.'
   # exercise
-  run zt_get_path_from_pretty <<< "$pretty_line"
+  run zt get_path_from_pretty <<< "$pretty_line"
   # verify
   assert $state equals 0
   assert "$output" same_as '/tmp/dir'

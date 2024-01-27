@@ -9,7 +9,7 @@
   echo '/tmp/dir3' >> "$XDG_CONFIG_HOME/zt/config.csv"
   echo '/tmp/ldir1' >> "$XDG_CONFIG_HOME/zt/config_local.csv"
   echo '/tmp/ldir2' >> "$XDG_CONFIG_HOME/zt/config_local.csv"
-  load '../trampoline.plugin.zsh'
+  load '../src/configuration.zsh'
 }
 
 @teardown {
@@ -21,7 +21,7 @@
 
 @test 'zt get_raw_directories_main gets main raw directories' {
   # exercise
-  run zt get_raw_directories_main
+  run zt get_raw_directories 'main'
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -33,7 +33,7 @@
 
 @test 'zt get_raw_directories_local gets local raw directories' {
   # exercise
-  run zt get_raw_directories_local
+  run zt get_raw_directories 'local'
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -44,7 +44,7 @@
 
 @test 'zt get_raw_directories_all gets all raw directories' {
   # exercise
-  run zt get_raw_directories_all
+  run zt get_raw_directories 'all'
   # verify
   assert $state equals 0
   assert "$output" is_not_empty
@@ -63,7 +63,7 @@
   run zt get_raw_directories_function
   # verify
   assert $state equals 0
-  assert "$output" same_as 'get_raw_directories_all'
+  assert "$output" same_as 'get_raw_directories all'
 }
 
 @test 'zt get_raw_directories_function returns zt_get_raw_directories_main' {
@@ -73,5 +73,5 @@
   run zt get_raw_directories_function
   # verify
   assert $state equals 0
-  assert "$output" same_as 'get_raw_directories_main'
+  assert "$output" same_as 'get_raw_directories main'
 }

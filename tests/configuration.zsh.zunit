@@ -1,7 +1,7 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load '../trampoline.plugin.zsh'
+  load '../src/configuration.zsh'
 }
 
 @test 'plugin version is set' {
