@@ -69,7 +69,7 @@ function reflect_get_function_names {
 function_names+=' reflect_get_function_names'
 
 # Provide passthrough access to the functions defined in this script. Motivation: A
-# simpler way to have these functions exposed is to add them to trampoline.zsh so that
-# they get sourced on the plugin bootstrap. However, the functions are not available on
-# the fzf's `reload` action, which is used in the Zsh widget. This solves that issue.
+# simpler way to have these functions exposed is to add them to a file which is sourced.
+# However, following that approach the functions are not available on the fzf's `reload`
+# action, which is used in the Zsh widget. This solves that issue.
 eval "$@"
