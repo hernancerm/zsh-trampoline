@@ -1,24 +1,26 @@
 # List directories in fzf and cd to the selected directory.
 function zt_widget_jump_to_directory {
   # Validate main configuration file path.
-  if ! [[ -f "$(zt get_configuration_file_path 'main')" ]]; then
+  if ! [[ -f "$(zt_get_configuration_file_path 'main')" ]]; then
     return 1
   fi
   if [[ $? -ne 0 ]]; then
-    printf "Missing configuration file: $(zt get_configuration_file_path 'main')" 1>&2
+    printf "Missing configuration file: $(zt_get_configuration_file_path 'main')" 1>&2
     zle accept-line
     return 1
   fi
-  local zt_raw_directories_function="$(zt get_raw_directories_function)"
-  local selected_directory="$(zt $zt_raw_directories_function \
-      | zt pretty_print true \
+  local zt_raw_directories_function="$(zt_get_raw_directories_function)"
+  local selected_directory="$(eval $zt_raw_directories_function \
+      | zt_pretty_print true \
       | fzf --tiebreak=index --prompt "< " \
           --bind "${ZT_KEY_MAP_TOGGLE_EXPAND}:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
-          echo 'change-prompt(< )+reload(zt $zt_raw_directories_function \
-              | zt pretty_print true)' ||
-          echo 'change-prompt(> )+reload(zt $zt_raw_directories_function \
-              | zt pretty_print false)'" \
-      | zt get_path_from_pretty)"
+          echo 'change-prompt(< )+reload(source $ZT_PLUGIN_PATH/src/directories.zsh \
+              ; eval $zt_raw_directories_function \
+              | zt_pretty_print true)' ||
+          echo 'change-prompt(> )+reload(source $ZT_PLUGIN_PATH/src/directories.zsh \
+              ; eval $zt_raw_directories_function \
+              | zt_pretty_print false)'" \
+      | zt_get_path_from_pretty)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
     return

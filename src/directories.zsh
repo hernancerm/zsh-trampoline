@@ -1,44 +1,36 @@
-#!/usr/bin/env zsh
-
-# Used for completions.
-local function_names=''
-
 # @param $1 Configuration file: 'main', 'local'.
-function get_configuration_file_path {
+function zt_get_configuration_file_path {
   case "$1" in
     'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/config.csv");;
     'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/config_local.csv");;
   esac
   echo "$config_file"
 }
-function_names+=' get_configuration_file_path'
 
 # @param $1 Raw directories to return; accepts 'main', 'local' or 'all'.
-function get_raw_directories {
-  local get_raw_directories_main="cat $(get_configuration_file_path 'main')"
-  local get_raw_directories_local="cat $(get_configuration_file_path 'local') 2>/dev/null"
+function zt_get_raw_directories {
+  local get_raw_directories_main="cat $(zt_get_configuration_file_path 'main')"
+  local get_raw_directories_local="cat $(zt_get_configuration_file_path 'local') 2>/dev/null"
   case "$1" in
     'main') eval "$get_raw_directories_main";;
     'local') eval "$get_raw_directories_local";;
     'all') eval "$get_raw_directories_main" && eval "$get_raw_directories_local";;
   esac
 }
-function_names+=' get_raw_directories'
 
 # @stdout Function name with args which when evaluated returns raw directories.
-function get_raw_directories_function {
+function zt_get_raw_directories_function {
   local list_local=$ZT_LIST_DIRECTORIES_LOCAL
-  local raw_directories_function='get_raw_directories main'
+  local raw_directories_function='zt_get_raw_directories main'
   if [[ $list_local -eq 1 ]]; then
-    local raw_directories_function='get_raw_directories all'
+    local raw_directories_function='zt_get_raw_directories all'
   fi
   echo "$raw_directories_function"
 }
-function_names+=' get_raw_directories_function'
 
 # @stdin Raw lines from the directories config file.
 # @stdout Pretty-printed directories.
-function pretty_print {
+function zt_pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
       | gawk -i trampoline.gawk -F, '{ print(length(zt::trim($1))) }' \
@@ -48,11 +40,10 @@ function pretty_print {
       -v longest_path_length=$longest_path_length -v expand=$1 '{
           zt::pretty_print($0, longest_path_length, expand) }'
 }
-function_names+=' pretty_print'
 
 # @stdin Prettified lines of lines from the directories config file.
 # @stdout The trimmed value of the field.
-function get_path_from_pretty {
+function zt_get_path_from_pretty {
   gawk -i trampoline.gawk '{
     split($0, fields_array, /\-\-/)
     path = zt::trim(fields_array[1])
@@ -60,16 +51,3 @@ function get_path_from_pretty {
     print(path)
   }'
 }
-function_names+=' get_path_from_pretty'
-
-function reflect_get_function_names {
-  # Use `xargs` to trim whitespace.
-  echo "$(echo $function_names | xargs)"
-}
-function_names+=' reflect_get_function_names'
-
-# Provide passthrough access to the functions defined in this script. Motivation: A
-# simpler way to have these functions exposed is to add them to a file which is sourced.
-# However, following that approach the functions are not available on the fzf's `reload`
-# action, which is used in the Zsh widget. This solves that issue.
-eval "$@"
