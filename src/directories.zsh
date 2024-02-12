@@ -9,12 +9,12 @@ function zt_get_configuration_file_path {
 
 # @param $1 Raw directories to return; accepts 'main', 'local' or 'all'.
 function zt_get_raw_directories {
-  local get_raw_directories_main="cat $(zt_get_configuration_file_path 'main')"
-  local get_raw_directories_local="cat $(zt_get_configuration_file_path 'local') 2>/dev/null"
+  local get_raw_dirs_main="cat $(zt_get_configuration_file_path 'main')"
+  local get_raw_dirs_local="cat $(zt_get_configuration_file_path 'local') 2> /dev/null"
   case "$1" in
-    'main') eval "$get_raw_directories_main";;
-    'local') eval "$get_raw_directories_local";;
-    'all') eval "$get_raw_directories_main" && eval "$get_raw_directories_local";;
+    'main') eval "$get_raw_dirs_main";;
+    'local') eval "$get_raw_dirs_local";;
+    'all') eval "$get_raw_dirs_main" && eval "$get_raw_dirs_local";;
   esac
 }
 
