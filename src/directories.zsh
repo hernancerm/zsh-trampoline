@@ -1,8 +1,8 @@
 # @param $1 Configuration file: 'main', 'local'.
 function zt_get_configuration_file_path {
   case "$1" in
-    'main')  local config_file=$(eval echo "$ZT_CONFIG_HOME/config.csv");;
-    'local') local config_file=$(eval echo "$ZT_CONFIG_HOME/config_local.csv");;
+    'main')  local config_file=$(eval echo "$ZT_HOME/config.csv");;
+    'local') local config_file=$(eval echo "$ZT_HOME/config_local.csv");;
   esac
   echo "$config_file"
 }
@@ -20,9 +20,8 @@ function zt_get_raw_directories {
 
 # @stdout Function name with args which when evaluated returns raw directories.
 function zt_get_raw_directories_function {
-  local list_local=$ZT_LIST_DIRECTORIES_LOCAL
   local raw_directories_function='zt_get_raw_directories main'
-  if [[ $list_local -eq 1 ]]; then
+  if [[ $ZT_LIST_DIRECTORIES_LOCAL -eq 1 ]]; then
     local raw_directories_function='zt_get_raw_directories all'
   fi
   echo "$raw_directories_function"
