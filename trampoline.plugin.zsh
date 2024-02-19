@@ -8,7 +8,7 @@
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
 
-export ZT_PLUGIN_PATH="${0:h}"
+ZT_PLUGIN_PATH="${0:h}"
 source "$ZT_PLUGIN_PATH/src/configuration.zsh"
 source "$ZT_PLUGIN_PATH/src/directories.zsh"
 source "$ZT_PLUGIN_PATH/src/widgets.zsh"
