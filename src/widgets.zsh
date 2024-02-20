@@ -9,17 +9,14 @@ function zt_widget_jump_to_directory {
     zle accept-line
     return 1
   fi
-  local zt_raw_directories_function="$(zt_get_raw_directories_function)"
-  local selected_directory="$(eval $zt_raw_directories_function \
-      | zt_pretty_print true \
+  local raw_dirs="$(eval "$(zt_get_raw_directories_function)")"
+  local pretty_dirs_expanded="$(echo "$raw_dirs" | zt_pretty_print true)"
+  local pretty_dirs_not_expanded="$(echo "$raw_dirs" | zt_pretty_print false)"
+  local selected_directory="$(echo "$pretty_dirs_expanded" \
       | fzf --tiebreak=index --prompt "< " \
           --bind "${ZT_KEY_MAP_TOGGLE_EXPAND}:transform:[[ ! {fzf:prompt} =~ \\< ]] &&
-          echo 'change-prompt(< )+reload(source $ZT_PLUGIN_PATH/src/directories.zsh \
-              ; eval $zt_raw_directories_function \
-              | zt_pretty_print true)' ||
-          echo 'change-prompt(> )+reload(source $ZT_PLUGIN_PATH/src/directories.zsh \
-              ; eval $zt_raw_directories_function \
-              | zt_pretty_print false)'" \
+          echo 'change-prompt(< )+reload(echo \"$pretty_dirs_expanded\")' ||
+          echo 'change-prompt(> )+reload(echo \"$pretty_dirs_not_expanded\")'" \
       | zt_get_path_from_pretty)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
