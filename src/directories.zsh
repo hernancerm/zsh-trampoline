@@ -31,10 +31,19 @@ function zt_get_raw_directories_function {
 # @stdout Pretty-printed directories. Mock-up: *~/dev/gc    -- Git cloned repos.
 function zt_pretty_print {
   local stdin="$(cat -)"
-  local longest_path_length="$(echo "$stdin" \
-      | gawk -i trampoline.gawk -F, '{ print(length(zt::trim($1))) }' \
-      | sort -rn \
-      | head -1)"
+  local paths_lengths=()
+  while IFS='\n$' read -r; do
+    if [[ "$REPLY" = *,* ]]; then
+      local directory_path="${${(s:,:)REPLY}[1]}"
+    else
+      local directory_path="${REPLY}"
+    fi
+    local path_whitespace_trimmed="${(*)${(*)directory_path##[ ]##}%%[ ]##}"
+    paths_lengths+=(${#path_whitespace_trimmed})
+  done <<< "$stdin"
+  local longest_path_length="$(printf "%s\n" "${paths_lengths[@]}" \
+    | sort -rn \
+    | head -1)"
   echo "$stdin" | gawk -i trampoline.gawk \
       -v longest_path_length=$longest_path_length -v expand=$1 '{
           zt::pretty_print($0, longest_path_length, expand) }'
