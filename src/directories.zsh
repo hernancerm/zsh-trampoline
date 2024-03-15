@@ -28,7 +28,7 @@ function zt_get_raw_directories_function {
 }
 
 # @stdin Raw lines from the directories config file.
-# @stdout Pretty-printed directories.
+# @stdout Pretty-printed directories. Mock-up: *~/dev/gc    -- Git cloned repos.
 function zt_pretty_print {
   local stdin="$(cat -)"
   local longest_path_length="$(echo "$stdin" \
@@ -43,10 +43,13 @@ function zt_pretty_print {
 # @stdin Prettified lines of lines from the directories config file.
 # @stdout The trimmed value of the field.
 function zt_get_path_from_pretty {
-  gawk -i trampoline.gawk '{
-    split($0, fields_array, /\-\-/)
-    path = zt::trim(fields_array[1])
-    sub(ENVIRON["ZT_DIRECTORY_DECORATOR"], "", path)
-    print(path)
-  }'
+  while IFS='\n$' read -r; do
+    if [[ "$REPLY" = *[-][-]* ]]; then
+      local path_without_description="${${(s:--:)REPLY}[1]}"
+    else
+      local path_without_description="$REPLY"
+    fi
+    local path_whitespace_trimmed="${(*)${(*)${path_without_description}##[ ]##}%%[ ]##}"
+    echo "${path_whitespace_trimmed##${ZT_DIRECTORY_DECORATOR}}"
+  done
 }
