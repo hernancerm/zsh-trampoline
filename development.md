@@ -60,4 +60,4 @@ docker cp ztdemo:/home/hernan/demo.tape ./demo
 
 ## Unit testing
 
-Unit testing for the Zsh and Gawk files is done with ZUnit: <https://zunit.xyz/>.
+Unit testing for the Zsh files is done with ZUnit: <https://zunit.xyz/>.

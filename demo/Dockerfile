@@ -50,7 +50,7 @@ RUN brew install vhs
 ENV VHS_NO_SANDBOX "true"
 
 # Install dependencies for zsh-trampoline and add configuration
-RUN brew install gawk fzf
+RUN brew install fzf
 RUN mkdir -p /home/hernan/.config/zt
 COPY config.csv /home/hernan/.config/zt
 

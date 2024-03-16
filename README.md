@@ -8,16 +8,14 @@ remove expanded directories from the filtered directories. See the `{expand}` co
 the [config file](#configuration-file). Type your query, press <kbd>enter</kbd>, and
 now you are on a different directory.
 
-## Requirements
+## Dependencies
 
-- [Gawk](https://www.gnu.org/software/gawk/) 4.1 or newer.
 - [fzf](https://github.com/junegunn/fzf) 0.45 or newer.
-- Zsh as your shell.
 
-On macOS, the requirements can be installed using [Homebrew](https://brew.sh/):
+On macOS, the dependencies can be installed using [Homebrew](https://brew.sh/):
 
 ```sh
-brew install gawk fzf
+brew install fzf
 ```
 
 ## Installation
