@@ -32,18 +32,16 @@ function zt_get_raw_directories_function {
 function zt_pretty_print {
   local stdin="$(cat -)"
   local paths_lengths=()
-  while IFS='\n$' read -r; do
-    if [[ "$REPLY" = *,* ]]; then
-      local directory_path="${${(s:,:)REPLY}[1]}"
-    else
-      local directory_path="${REPLY}"
-    fi
+  while IFS='\n$' read -r dir_raw; do
+    local directory_path="${dir_raw}"
+    if [[ "$directory_path" = *,* ]] directory_path="${${(s:,:)dir_raw}[1]}"
     local path_whitespace_trimmed="${(*)${(*)directory_path##[ ]##}%%[ ]##}"
     paths_lengths+=(${#path_whitespace_trimmed})
   done <<< "$stdin"
-  local longest_path_length="$(printf "%s\n" "${paths_lengths[@]}" \
-    | sort -rn \
-    | head -1)"
+  local -i longest_path_length=0
+  for length in "${paths_lengths[@]}"; do
+    if [[ $longest_path_length -lt $length ]] longest_path_length=$length
+  done
   echo "$stdin" | gawk -i trampoline.gawk \
       -v longest_path_length=$longest_path_length -v expand=$1 '{
           zt::pretty_print($0, longest_path_length, expand) }'
@@ -52,11 +50,10 @@ function zt_pretty_print {
 # @stdin Prettified lines of lines from the directories config file.
 # @stdout The trimmed value of the field.
 function zt_get_path_from_pretty {
-  while IFS='\n$' read -r; do
-    if [[ "$REPLY" = *[-][-]* ]]; then
-      local path_without_description="${${(s:--:)REPLY}[1]}"
-    else
-      local path_without_description="$REPLY"
+  while IFS='\n$' read -r dir_pretty; do
+    local path_without_description="$dir_pretty"
+    if [[ "$path_without_description" = *[-][-]* ]]; then
+      path_without_description="${${(s:--:)dir_pretty}[1]}"
     fi
     local path_whitespace_trimmed="${(*)${(*)${path_without_description}##[ ]##}%%[ ]##}"
     echo "${path_whitespace_trimmed##${ZT_DIRECTORY_DECORATOR}}"
