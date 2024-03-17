@@ -2,7 +2,7 @@
 function zt_widget_jump_to_directory {
   # Verify a configuration source is provided.
   if ! [[ -f "$ZT_CONFIG_FILE_PATH" ]] && [[ ${+zt_config} -eq 0 ]]; then
-    printf "No configuration source. One of the following must exist:
+    printf "No configuration source. At least one of the following must exist:
     1. CSV configuration file: $ZT_CONFIG_FILE_PATH
     2. Zsh array parameter: zt_config" 1>&2
     zle accept-line

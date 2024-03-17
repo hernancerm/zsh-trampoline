@@ -29,14 +29,14 @@ function zt_pretty_print {
   local -i longest_path_length=$(zt_get_longest_path_length "$stdin")
   while IFS='\n$' read -r raw_dir; do
     local -a raw_dir_parts=("${(@s:,:)raw_dir}")
-    local path_no_whitespace=${(*)${(*)${raw_dir_parts[1]}##[ ]##}%%[ ]##}
+    local path_no_whitespace="${(*)${(*)${raw_dir_parts[1]}##[ ]##}%%[ ]##}"
     # Print directory.
     if [[ -z "${raw_dir_parts[2]}" ]]; then
       # Directory does not have a description.
       printf '%s%s\n' $ZT_DIRECTORY_DECORATOR "$path_no_whitespace"
     else
       # Directory has a description.
-      local desc_no_whitespace=${(*)${(*)${raw_dir_parts[2]}##[ ]##}%%[ ]##}
+      local desc_no_whitespace="${(*)${(*)${raw_dir_parts[2]}##[ ]##}%%[ ]##}"
       printf '%s%s\n' \
           $ZT_DIRECTORY_DECORATOR \
           "${(r:$(($longest_path_length + 2)):)path_no_whitespace}-- $desc_no_whitespace"
