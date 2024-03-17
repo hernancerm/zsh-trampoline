@@ -1,33 +1,10 @@
-# @param $1 Configuration file: 'main', 'local'.
-function zt_get_configuration_file_path {
-  case "$1" in
-    'main')  local config_file=$(eval echo "$ZT_HOME/config.csv");;
-    'local') local config_file=$(eval echo "$ZT_HOME/config_local.csv");;
-  esac
-  echo "$config_file"
-}
-
-# @param $1 Raw directories to return; accepts 'main', 'local' or 'all'.
+# @stdout Raw directories. List first from the config file, then from the array parameter.
 function zt_get_raw_directories {
-  local get_raw_dirs_main="cat $(zt_get_configuration_file_path 'main')"
-  local get_raw_dirs_local="cat $(zt_get_configuration_file_path 'local') 2> /dev/null"
-  case "$1" in
-    'main') eval "$get_raw_dirs_main";;
-    'local') eval "$get_raw_dirs_local";;
-    'all') eval "$get_raw_dirs_main" && eval "$get_raw_dirs_local";;
-  esac
+  cat "$ZT_CONFIG_FILE_PATH" 2> /dev/null
+  printf '%s\n' "${zt_config[@]}"
 }
 
-# @stdout Function name with args which when evaluated returns raw directories.
-function zt_get_raw_directories_function {
-  local raw_directories_function='zt_get_raw_directories main'
-  if [[ $ZT_LIST_DIRECTORIES_LOCAL -eq 1 ]]; then
-    local raw_directories_function='zt_get_raw_directories all'
-  fi
-  echo "$raw_directories_function"
-}
-
-# @stdin Raw lines from the directories config file.
+# @stdin Raw lines from the directories config.
 # @stdout Length (integer) of the longest directory path as-written in the config.
 function zt_get_longest_path_length {
   local paths_lengths=()
@@ -44,7 +21,7 @@ function zt_get_longest_path_length {
   echo $longest_path_length
 }
 
-# @stdin Raw lines from the directories config file.
+# @stdin Raw lines from the directories config.
 # @param $1 When 'true' print level-one sub-directories for dirs marked for expansion.
 # @stdout Pretty-printed directories. Mock-up: *~/dev/gc    -- Git cloned repos.
 function zt_pretty_print {
@@ -77,8 +54,8 @@ function zt_pretty_print {
   done <<< "$stdin"
 }
 
-# @stdin Prettified lines of lines from the directories config file.
-# @stdout The trimmed value of the field.
+# @stdin Prettified lines of directories.
+# @stdout The whitespace&decorator-trimmed value of the path field.
 function zt_get_path_from_pretty {
   while IFS='\n$' read -r dir_pretty; do
     local path_without_description="$dir_pretty"

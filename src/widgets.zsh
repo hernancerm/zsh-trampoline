@@ -1,15 +1,14 @@
 # List directories in fzf and cd to the selected directory.
 function zt_widget_jump_to_directory {
-  # Validate main configuration file path.
-  if ! [[ -f "$(zt_get_configuration_file_path 'main')" ]]; then
-    return 1
-  fi
-  if [[ $? -ne 0 ]]; then
-    printf "Missing configuration file: $(zt_get_configuration_file_path 'main')" 1>&2
+  # Verify a configuration source is provided.
+  if ! [[ -f "$ZT_CONFIG_FILE_PATH" ]] && [[ ${+zt_config} -eq 0 ]]; then
+    printf "No configuration source. One of the following must exist:
+    1. CSV configuration file: $ZT_CONFIG_FILE_PATH
+    2. Zsh array parameter: zt_config" 1>&2
     zle accept-line
     return 1
   fi
-  local raw_dirs="$(eval "$(zt_get_raw_directories_function)")"
+  local raw_dirs="$(zt_get_raw_directories)"
   local pretty_dirs_expanded="$(echo "$raw_dirs" | zt_pretty_print true)"
   local pretty_dirs_not_expanded="$(echo "$raw_dirs" | zt_pretty_print false)"
   local selected_directory="$(echo "$pretty_dirs_expanded" \

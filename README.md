@@ -55,20 +55,19 @@ function zvm_after_init {
 The configuration for zsh-trampoline is provided in two places:
 
 1. A CSV configuration file.
-2. Environment variables.
+2. Zsh parameters.
 
-The CSV file must be created by the user. Regarding the environment variables, default
-values are provided. Only override these if you prefer something different from the
-defaults.
+Before using zsh-trampoline, it's required to create the CSV configuration file or to set
+the Zsh parameter `zt_config`. All other configuration is optional.
 
-### Configuration file
+### CSV configuration file
 
 The `config.csv` file is where the available directories to jump to are defined.
 
-This CSV config file is searched in the directory `$XDG_CONFIG_HOME/zt`. When the
-environment variable `$XDG_CONFIG_HOME` is not set, it's searched in `~/.config/zt`. The
-row format of the file is as shown below. Conceptually, each row represents a directory
-that can be jumped to, and each directory can have metadata associated to it.
+This CSV config file is searched in the directory `$XDG_CONFIG_HOME/zt`. When the variable
+`$XDG_CONFIG_HOME` is not set, the file is searched in `~/.config/zt`. The line format of
+the file is as shown below. Conceptually, each line represents a directory that can be
+jumped to, and each directory can have metadata associated to it.
 
 ```text
 {path}, {description}, {expand}
@@ -87,7 +86,7 @@ that can be jumped to, and each directory can have metadata associated to it.
 <tr>
 <td><code>{path}</code></td><td><p>Yes</p></td>
 <td>
-Relative or absolute path to a directory. Environment variables and the caret symbol
+Relative or absolute path to a directory. Parameters (e.g. <code>$HOME</code>) and the caret symbol
 (<code>~</code>) are recognized.
 </td>
 </tr>
@@ -107,7 +106,7 @@ Whether to list all level-1 subdirectories. To enable set to <code>true</code>.
 </table>
 
 Example of valid contents of a file `config.csv`. Notice that spaces for padding are
-allowed, but are not required.
+allowed (but are not required).
 
 ```text
 ~/dev/gc     , Git cloned repos not mine.   , true
@@ -118,20 +117,25 @@ allowed, but are not required.
 ~/dev/temp
 ```
 
-In addition to `config.csv`, a second file, `config_local.csv`, may be provided in the
-same directory. The conents of the second file are expected to be of the same format as
-that of the first file.
-
-### Environment variables
+### Zsh parameters
 
 <table>
 <thead>
 <tr>
-<th>Environment variable</th><th>Allowed values</th>
+<th>Zsh parameters</th><th>Allowed values</th>
 <th>Default value</th><th>Description</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>zt_config</code></td>
+<td>Lines as in the CSV config file.</td><td>None.</td>
+<td>
+Array parameter. Each array element is expected to match the same structure as the lines
+in the CSV config file. If this param is set, dirs from this param are listed after the
+ones in the config file.
+</td>
+</tr>
 <tr>
 <td><code>ZT_KEY_MAP_JUMP_TO_DIRECTORY</code></td>
 <td>
@@ -150,16 +154,14 @@ for the column <code>{expand}</code>. This allows seeing only the directories ex
   listed in the config file. By default, it’s <kbd>*</kbd>.
 </td>
 </tr>
-<tr>
-<td><code>ZT_LIST_DIRECTORIES_LOCAL</code></td>
-<td><code>0</code> or <code>1</code></td><td><code>1</code></td>
-<td>
-Whether to list directories listed in <code>config_local.csv</code>. By default, all
-configured directories are listed.
-</td>
-</tr>
 </tbody>
 </table>
+
+Example of setting a value for `zt_config` (can be placed in the `.zshrc`):
+
+```bash
+zt_config=( '~/dev/work,,true' '~/dev/temp' )
+```
 
 To get the same behavior from fzf as in the demo GIF, set these default options for fzf:
 
