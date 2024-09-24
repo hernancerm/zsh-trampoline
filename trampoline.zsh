@@ -11,20 +11,20 @@ function zt_version {
 }
 
 # Global configuration.
-typeset ZT_KEY_MAP_JUMP_TO_DIRECTORY='^j'
+typeset ZT_KEY_MAP_JUMP='^j'
 
 # DIRECTORIES
 
-# @stdout Print directories ready to be used in a picker like fzf.
-function zt_print_dirs {
-  for raw_dir in ${ZT_CONFIG}; do
-    local dir_path="${raw_dir%%:*}"
-    if [[ ${raw_dir[(i):single]} -le ${#raw_dir} ]]; then
+# @stdout Print file paths ready to be used in a picker like fzf.
+function zt_print_files {
+  for raw_file in ${ZT_CONFIG}; do
+    local file_path="${raw_file%%:*}"
+    if [[ ${raw_file[(i):single]} -le ${#raw_file} ]]; then
       # No expand
-      echo "${dir_path}" | sed "s#${HOME}#~#"
+      echo "${file_path}" | sed "s#${HOME}#~#"
     else
       # Expand
-      find "${(e)${dir_path}/[~]/${HOME}}" -maxdepth 1 -type d \
+      find "${(e)${file_path}/[~]/${HOME}}" -maxdepth 1 -type d \
         | sed '1d' | sed "s#${HOME}#~#" | sort | xargs printf '%s\n'
     fi
   done
@@ -33,7 +33,7 @@ function zt_print_dirs {
 # WIDGETS
 
 # List directories in fzf and cd to the selected directory.
-function zt_widget_jump_to_directory {
+function zt_widget_jump_to_file {
   # Verify a configuration source is provided.
   if [[ ${+ZT_CONFIG} -eq 0 ]]; then
     printf 'No configuration source. Export the Zsh parameter `ZT_CONFIG`.' 1>&2
@@ -41,26 +41,27 @@ function zt_widget_jump_to_directory {
     return 1
   fi
   local pretty_dirs="$)"
-  local selected_directory="$(zt_print_dirs | fzf --tiebreak=index)"
+  local selected_directory="$(zt_print_files | fzf --tiebreak=index)"
   if [[ -z "$selected_directory" ]]; then
     zle reset-prompt
     return
   fi
-  local selected_directory_expanded="$(eval echo ${selected_directory})"
-  BUFFER="cd ${selected_directory_expanded}"
+  local selected_file_expanded="$(eval echo ${selected_directory})"
+  if [[ -d ${selected_file_expanded} ]] BUFFER="cd ${selected_file_expanded}"
+  if [[ -f ${selected_file_expanded} ]] BUFFER="${EDITOR} ${selected_file_expanded}"
   zle accept-line
   zle reset-prompt
 }
 
 # Standard widget setup.
-function zt_setup_widget_jump_to_directory {
-  zle -N zt_widget_jump_to_directory
-  bindkey ${ZT_KEY_MAP_JUMP_TO_DIRECTORY} zt_widget_jump_to_directory
+function zt_setup_widget_jump_to_file {
+  zle -N zt_widget_jump_to_file
+  bindkey ${ZT_KEY_MAP_JUMP} zt_widget_jump_to_file
 }
 
 # Setup widget as per zsh-vi-mode requirements.
 # https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings
-function zt_zvm_setup_widget_jump_to_directory {
-  zvm_define_widget zt_widget_jump_to_directory
-  zvm_bindkey viins ${ZT_KEY_MAP_JUMP_TO_DIRECTORY} zt_widget_jump_to_directory
+function zt_zvm_setup_widget_jump_to_file {
+  zvm_define_widget zt_widget_jump_to_file
+  zvm_bindkey viins ${ZT_KEY_MAP_JUMP} zt_widget_jump_to_file
 }
