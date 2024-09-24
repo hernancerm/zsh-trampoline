@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# @param 1..n Items from the parameter ZT_CONFIG.
+# @stdout Files without options.
+for raw_file in ${@}; do
+  echo "${raw_file%%:*}" | sed "s#${HOME}#~#"
+done
