@@ -5,10 +5,4 @@
 0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
-# Do not source this script multiple times.
-command -v zt_version > /dev/null && return
-
-ZT_PLUGIN_PATH="${0:h}"
-source "$ZT_PLUGIN_PATH/src/configuration.zsh"
-source "$ZT_PLUGIN_PATH/src/directories.zsh"
-source "$ZT_PLUGIN_PATH/src/widgets.zsh"
+source ${0:h}/trampoline.zsh
