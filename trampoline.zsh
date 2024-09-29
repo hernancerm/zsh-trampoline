@@ -7,7 +7,7 @@ command -v zt_version > /dev/null && return
 # CONFIGURATION
 
 function zt_version {
-  echo '0.1.0-dev'
+  echo '0.1.0'
 }
 
 # Global configuration.
