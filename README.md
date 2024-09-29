@@ -1,16 +1,16 @@
 # zsh-trampoline
 
-Jump (`cd` or edit with `${EDITOR}`) (to) the places (directory or file) that matter to you.
-
-This plugin is simple. Directories and files are always listed in
-[fzf](https://github.com/junegunn/fzf) for your choosing and there is no ranking
-algorithm. The order for the same files is always the same.
+Jump to the places that matter to you.
 
 ## Demo
 
 https://github.com/user-attachments/assets/1b1f5534-a705-448e-8be3-7b1d89a3cf18
 
 ## Usage
+
+This plugin is simple. Directories and files are always listed in
+[fzf](https://github.com/junegunn/fzf) for your choosing and there is no ranking
+algorithm. The same files are always listed in the same order.
 
 Press `Ctrl+j` to start fzf with directories and files to "jump" to: `cd` or edit with
 `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG` that you need to
@@ -22,8 +22,8 @@ different directory or editing a file.
 
 ## Dependencies
 
-- [fzf](https://github.com/junegunn/fzf) 0.45 or newer.
-  - Install with [Homebrew](https://brew.sh/): `brew install fzf`.
+- [fzf](https://github.com/junegunn/fzf) >=0.45.
+  - Installation with [Homebrew](https://brew.sh/): `brew install fzf`.
 
 ## Installation
 
