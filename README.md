@@ -14,11 +14,10 @@ algorithm. The same files are always listed in the same order.
 
 Press `Ctrl+j` to start fzf with directories and files to "jump" to: `cd` or edit with
 `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG` that you need to
-define (see the section [Configuration](#configuration)).
+define (see the section [Setup](#setup)).
 
-When fzf starts, press `*` to toggle showing only the dirs and files listed in `ZT_CONFIG`
-(no expanding directories to show level-1 sub-dirs). Press `Enter` and now you are on a
-different directory or editing a file.
+When fzf starts, press `*` to toggle showing only the dirs and files explicitly listed in
+`ZT_CONFIG`. Press `Enter` and now you are on a different directory or editing a file.
 
 ## Dependencies
 
@@ -30,7 +29,7 @@ different directory or editing a file.
 The installation means doing 2 things: Download the code and `source` the file
 [trampoline.plugin.zsh](./trampoline.plugin.zsh). You can do that manually or use a plugin
 manager for Zsh. I like to use [Sheldon](https://github.com/rossmacarthur/sheldon) as my
-plugin manager, here is how the config looks:
+plugin manager:
 
 ```toml
 # ~/.config/sheldon/plugins.toml
@@ -45,10 +44,10 @@ The setup is easy peasy. You are only required to configure 2 thing:
 
 #### 1. Define the array parameter `ZT_CONFIG`
 
-In this parameter you put your directories and files you want to jump to on `Ctrl+j`. For
-example:
+I recommend defining `ZT_CONFIG` in your `~/.zshrc`. In this parameter you put your
+directories and files you want to jump to when pressing `Ctrl+j`. Sample definition:
 
-```sh
+```text
 ZT_CONFIG=(
   ~/dev/gc
   ~/dev/gr
@@ -60,8 +59,6 @@ ZT_CONFIG=(
 
 By default, level-1 sub-directories are listed per each directory in ZT_CONFIG. To disable
 this expansion but still list the individual directory, suffix the directory with `:0`.
-
-Define the parameter ZT_CONFIG in your `~/.zshrc`.
 
 #### 2. Bind the widget on `Ctrl+j`
 
