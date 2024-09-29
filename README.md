@@ -19,7 +19,7 @@ define (see the section [Setup](#setup)).
 When fzf starts, press `*` to toggle showing only the dirs and files explicitly listed in
 `ZT_CONFIG`. Press `Enter` and now you are on a different directory or editing a file.
 
-## Dependencies
+## Requirements
 
 - [fzf](https://github.com/junegunn/fzf) >=0.45.
   - Installation with [Homebrew](https://brew.sh/): `brew install fzf`.
