@@ -6,6 +6,10 @@ This plugin is simple. Directories and files are always listed in
 [fzf](https://github.com/junegunn/fzf) for your choosing and there is no ranking
 algorithm. The order for the same files is always the same.
 
+## Demo
+
+https://github.com/user-attachments/assets/1b1f5534-a705-448e-8be3-7b1d89a3cf18
+
 ## Usage
 
 Press `Ctrl+j` to start fzf with directories and files to "jump" to: `cd` or edit with
