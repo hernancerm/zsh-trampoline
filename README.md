@@ -16,8 +16,8 @@ zsh-trampoline simply displays all your configured dirs and files in fzf, always
 same order. I've used this for several months and it has worked for me, it might work for
 you as well.
 
-The codebase is very small. The LOC is less than 100 as per the output from
-[tokei](https://github.com/XAMPPRocky/tokei) for the repo as of Oct 5, 2024:
+The codebase is very small, less than 100 LOC as per the output from
+[tokei](https://github.com/XAMPPRocky/tokei) as of Oct 5, 2024:
 
 ```
 ===============================================================================
