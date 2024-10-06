@@ -1,0 +1,19 @@
+# Welcome to the demo of zsh-trampoline!
+# Once the plugin is installed and set up,
+# press ctrl+j to list dirs and files in fzf.
+# Select one to "jump" to it (cd or edit).
+
+# So far I've just shown jumping to dirs.
+# Let's see jumping to a file now. This opens
+# the file in the editor configured in the
+# env var EDITOR.
+
+# When fzf starts, press star (*) to toggle
+# showing only the dirs and files explicitly
+# listed in the plugin's configuration.
+
+# This is the plugin config used for the demo:
+
+# The contents are easier to read with `typeset`:
+
+ vim:tw=50
