@@ -34,7 +34,7 @@ function zt_widget_jump_to_file {
   fi
   local selected_file_expanded="$(eval echo ${selected_file})"
   if [[ -d ${selected_file_expanded} ]] BUFFER="cd ${selected_file_expanded}"
-  if [[ -f ${selected_file_expanded} ]] BUFFER="${EDITOR} ${selected_file_expanded}"
+  if [[ -f ${selected_file_expanded} ]] BUFFER="${EDITOR:-vim} ${selected_file_expanded}"
   zle accept-line
   zle reset-prompt
 }

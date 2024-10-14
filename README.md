@@ -90,7 +90,7 @@ this expansion but still list the individual directory, suffix the directory wit
 #### Second step: Bind the widget on `ctrl+j`
 
 To make `ctrl+j` do what it's supposed to, you need to call **one** of the functions below
-in your `~/.zshrc`, depending on the criteria indicated:
+in your file `~/.zshrc`, depending on the criteria indicated:
 
 1. `zt_zvm_setup_widget_jump_to_file`: When you are using the amazing plugin
    [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode). Do the call inside the
@@ -99,7 +99,7 @@ in your `~/.zshrc`, depending on the criteria indicated:
 ```sh
 function zvm_after_init {
   # In insert mode, press 'ctrl+j' to cd to a directory.
-  zt_zvm_setup_widget_jump_to_directory
+  zt_zvm_setup_widget_jump_to_file
 }
 ```
 
