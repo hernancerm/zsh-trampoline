@@ -23,18 +23,23 @@ function zt_widget_jump_to_file {
     zle accept-line
     return 1
   fi
-  local selected_file="$(${ZT_PATH}/cmd/zt_print_files ${ZT_CONFIG}\
+  local fzf_selection="$(${ZT_PATH}/cmd/zt_print_files ${ZT_CONFIG}\
   | fzf --tiebreak=index --prompt "> " \
     --bind "*:transform:[[ ! {fzf:prompt} =~ \\> ]] &&
       echo 'change-prompt(> )+reload(${ZT_PATH}/cmd/zt_print_files ${ZT_CONFIG})' ||
       echo 'change-prompt(< )+reload(${ZT_PATH}/cmd/zt_print_files_flat ${ZT_CONFIG})'")"
-  if [[ -z "${selected_file}" ]]; then
+  if [[ -z "${fzf_selection}" ]]; then
     zle reset-prompt
     return
   fi
-  local selected_file_expanded="$(eval echo ${selected_file})"
-  if [[ -d ${selected_file_expanded} ]] BUFFER="cd ${selected_file_expanded}"
-  if [[ -f ${selected_file_expanded} ]] BUFFER="${EDITOR:-vim} ${selected_file_expanded}"
+  # Expand the tilde symbol (~) and environment variables.
+  local file_path="$(eval echo ${fzf_selection})"
+  if [[ -d "${file_path}" ]]; then
+    BUFFER="cd ${file_path}"
+    # When the file path has a whitespace char, surround it with single quotes.
+    if [[ ${file_path[(i) ]} -le ${#file_path} ]] BUFFER="cd '${file_path}'"
+  fi
+  if [[ -f "${file_path}" ]] BUFFER="${EDITOR:-vim} ${file_path}"
   zle accept-line
   zle reset-prompt
 }

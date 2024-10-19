@@ -8,6 +8,6 @@ for raw_file in ${@}; do
     echo "${file_path}" | sed "s#${HOME}#~#"
   else
     find "${(e)${file_path}/[~]/${HOME}}" -maxdepth 1 -type d \
-      | sed 1d | sed "s#${HOME}#~#" | sort | xargs printf "%s\n"
+      | sed 1d | sed "s#${HOME}#~#" | sort
   fi
 done
