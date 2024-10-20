@@ -1,8 +1,13 @@
 #!/bin/zsh
 
+## Print files as configured in ZT_CONFIG.
+## @param $1 ZT_CONFIG serialization file, which content is the output of `typeset -p ZT_CONFIG`.
+
+source "${1}"
+
 ## @param $@ Items from the parameter ZT_CONFIG.
 ## @stdout Files without options. Options are applied to build stdout.
-for raw_file in ${@}; do
+for raw_file in ${ZT_CONFIG}; do
   local file_path="${raw_file%%:*}"
   if [[ -f ${file_path} ]] || [[ ${raw_file[(i):0]} -le ${#raw_file} ]]; then
     echo "${file_path}" | sed "s#${HOME}#~#"
