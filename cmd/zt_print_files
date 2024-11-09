@@ -9,10 +9,16 @@ source "${1}"
 ## @stdout Files without options. Options are applied to build stdout.
 for raw_file in ${ZT_CONFIG}; do
   local file_path="${raw_file%%:*}"
-  if [[ -f ${file_path} ]] || [[ ${raw_file[(i):0]} -le ${#raw_file} ]]; then
+  local file_path_expanded="$(eval echo ${file_path})"
+  if [[ -f "${file_path_expanded}" ]] || [[ ${raw_file[(i):0]} -le ${#raw_file} ]]; then
+    # Pretty print the items which are:
+    # 1. File paths. 2. Env vars pointing to a file path. 3. Items containing ':0'.
     echo "${file_path}" | sed "s#${HOME}#~#"
-  else
-    find "${(e)${file_path}/[~]/${HOME}}" -maxdepth 1 -type d \
+  elif [[ -d "${file_path_expanded}" ]]; then
+    # Print sub-dirs at level-1 the items which are:
+    # 1. Dir paths. 2. Env vars pointing to a dir path.
+    # Note: The dir path itself is not printed.
+    find "${file_path_expanded}" -maxdepth 1 -type d \
       | sed 1d | sed "s#${HOME}#~#" | sort
   fi
 done

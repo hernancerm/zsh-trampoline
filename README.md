@@ -63,7 +63,7 @@ github = "hernancerm/zsh-trampoline"
 
 I recommend defining the Zsh parameter `ZT_CONFIG` in your `~/.zshrc`. In this parameter
 you put your directories and files you want to jump to when pressing <kbd>ctrl+j</kbd>;
-they should already exist in your filesystem. Sample definition:
+they must already exist in your filesystem. Sample definition:
 
 ```text
 # Sample definition. Place in file: ~/.zshrc
@@ -76,9 +76,21 @@ ZT_CONFIG=(
 )
 ```
 
-By default, level-1 sub-dirs are listed per each directory in `ZT_CONFIG`. To disable this
-expansion suffix the dir with `:0`. If your directory has whitespace chars, enclose it in
-single or double quotes.
+Some things to note:
+
+- If your item has whitespace chars, surround it with single quotes.
+- Environment variables, defined as `export MY_VAR=~/file/path`, are supported quoted.
+  Do not forget to use the `export` keyword. That is, this could be a valid entry in
+  `ZT_CONFIG`: `'${MY_VAR}'`. The plugin does the expansion.
+- On <kbd>ctrl+j</kbd> specifically what gets listed is:
+  - Files. Quoted env vars which point to a file are listed as the env var.
+  - Level 1 sub-dirs of the dirs in `ZT_CONFIG`. Quoted env vars which point to a dir are
+    treated as dirs.
+  - Anything ending in `:0`. In this case the `:0` is stripped. The purpose of this is to
+    be able to list the dirs themselves which are in `ZT_CONFIG`, avoiding the sub-dirs
+    replacement.
+- While on fzf, on <kbd>*</kbd> specifically what gets listed is:
+  - Allows to toggle between initial listing and items as-are from `ZT_CONFIG`.
 
 #### Second step: Bind the widget on <kbd>ctrl+j</kbd>
 
