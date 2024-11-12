@@ -33,27 +33,31 @@ directory or editing a file.
 ## Installation
 
 You can use a Zsh plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon)
-for the installation, alternatively there is a quick start snippet below.
+for the installation, alternatively use the quick-start snippet below.
 
-**If you are in macOS and have Homebrew installed**, just place this in your `~/.zshrc`
-and start a new shell.
+**If you are in macOS, place this in your `~/.zshrc` and start a new shell. For the
+snippet to work you must already have installed the Xcode Command Line Tools (install with
+`xcode-select --install`) and [Homebrew](https://brew.sh/).**
 
 ```bash
 # START: ZSH-TRAMPOLINE
 # Project homepage: https://github.com/hernancerm/zsh-trampoline
 typeset -r zt_git_clone_dir='/usr/local/zsh-trampoline'
 typeset -r zt_gh_url='https://github.com/hernancerm/zsh-trampoline.git'
-# Install zsh-trampoline.
-if ! [[ -d "${zt_git_clone_dir}" ]] git clone "${zt_gh_url}" "${zt_git_clone_dir}"
-source '/usr/local/zsh-trampoline/trampoline.plugin.zsh'
-# Install fzf. Version >=0.45 is required.
+# Install Git, if not already installed.
+if [[ -z $(command -v git) ]] brew install git
+# Install fzf, if not already installed. Version >=0.45 is required.
 # https://github.com/junegunn/fzf
 if [[ -z $(command -v fzf) ]] brew install fzf
+# Install zsh-trampoline.
+if ! [[ -d "${zt_git_clone_dir}" ]] git clone "${zt_gh_url}" "${zt_git_clone_dir}"
+source "${zt_git_clone_dir}/trampoline.plugin.zsh"
+# zsh-trampoline configuration.
 ZT_CONFIG=(
   # Place in a new line the directories and files you want to jump to.
   ~
 )
-# Bind ctrl+j to list the files.
+# Bind ctrl+j to start fzf with the files from ZT_CONFIG.
 zt_setup_widget_jump_to_file
 # END: ZSH-TRAMPOLINE
 ```
