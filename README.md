@@ -15,11 +15,6 @@ a ranking algorithm to try to determine the most likely directory you want to `c
 zsh-trampoline simply displays all your configured dirs and files in fzf, always in the
 same order.
 
-I've used this for several months and it has worked for me, it might work for you as well.
-Please note that since this is a Zsh plugin, it only works if your shell is Zsh. You can
-learn this by typing `echo $SHELL`; if the output contains `zsh` somewhere, you are likely
-on the right shell.
-
 ## Usage
 
 Press <kbd>ctrl+j</kbd> to start fzf with directories and files to "jump" to: `cd` or edit
