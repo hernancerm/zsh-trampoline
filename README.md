@@ -42,7 +42,7 @@ snippet to work you must already have installed the Xcode Command Line Tools (in
 ```bash
 # START: ZSH-TRAMPOLINE
 # Project homepage: https://github.com/hernancerm/zsh-trampoline
-typeset -r zt_git_clone_dir='/usr/local/zsh-trampoline'
+typeset -r zt_git_clone_dir="${HOME}/.zsh-trampoline/zsh-trampoline"
 typeset -r zt_gh_url='https://github.com/hernancerm/zsh-trampoline.git'
 # Install Git, if not already installed.
 if [[ -z $(command -v git) ]] brew install git
