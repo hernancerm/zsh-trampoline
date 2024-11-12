@@ -37,19 +37,18 @@ snippet to work you must already have installed the Xcode Command Line Tools (in
 ```bash
 # START: ZSH-TRAMPOLINE
 # Project homepage: https://github.com/hernancerm/zsh-trampoline
-typeset -r zt_git_clone_dir="${HOME}/.zsh-trampoline/zsh-trampoline"
-typeset -r zt_gh_url='https://github.com/hernancerm/zsh-trampoline.git'
 # Install Git, if not already installed.
 if [[ -z $(command -v git) ]] brew install git
 # Install fzf, if not already installed. Version >=0.45 is required.
 # https://github.com/junegunn/fzf
 if [[ -z $(command -v fzf) ]] brew install fzf
 # Install zsh-trampoline.
-if ! [[ -d "${zt_git_clone_dir}" ]] git clone "${zt_gh_url}" "${zt_git_clone_dir}"
+git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
+  "${HOME}/.zsh-trampoline/zsh-trampoline" 2> /dev/null
 source "${zt_git_clone_dir}/trampoline.plugin.zsh"
 # zsh-trampoline configuration.
 ZT_CONFIG=(
-  # Place in a new line the directories and files you want to jump to.
+  # Place in a new line the dirs and files you want to jump to.
   ~
 )
 # Bind ctrl+j to start fzf with the files from ZT_CONFIG.
@@ -57,11 +56,33 @@ zt_setup_widget_jump_to_file
 # END: ZSH-TRAMPOLINE
 ```
 
+<details>
+  <summary>
+    The snippet is too long! I want a shorter snippet.
+  </summary>
+
+
+**To use this snippet you should already have installed git and
+[fzf](https://github.com/junegunn/fzf).**
+
+```bash
+# ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
+git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
+  "${HOME}/.zsh-trampoline/zsh-trampoline" 2> /dev/null
+source "${zt_git_clone_dir}/trampoline.plugin.zsh"
+ZT_CONFIG=(
+  # Place in a new line the dirs and files you want to jump to.
+  ~
+)
+zt_setup_widget_jump_to_file
+```
+
+</details>
+
 ### I'm on Linux, what now?
 
 - Ensure your shell is Zsh: `echo $SHELL` should include `zsh` in its output.
-- You may use the snippet above but you need to change the package manager to be `apt` or
-  whatever you use, or you can install Homebrew and then you can use the same snippet.
+- You may use the shorter snippet above (or the longer one if you use Homebrew).
 
 ## Parameter `ZT_CONFIG`
 
