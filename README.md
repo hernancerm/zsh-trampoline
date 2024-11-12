@@ -32,53 +32,43 @@ directory or editing a file.
 
 ## Installation
 
-First, install fzf:
+You can use a Zsh plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon)
+for the installation, alternatively there is a quick start snippet below.
 
-- [fzf](https://github.com/junegunn/fzf) >=0.45
+**If you are in macOS and have Homebrew installed**, just place this in your `~/.zshrc`
+and start a new shell.
 
-This can be done with [Homebrew](https://brew.sh/):
-
-```
-brew install fzf
-```
-
-Then, install the plugin. This means doing 2 things: Download the code and `source` the
-file [trampoline.plugin.zsh](./trampoline.plugin.zsh). You can do that manually via a `git
-clone` and then a `source` command in your `~/.zshrc`, or use a plugin manager for Zsh.
-Here is an example using [Sheldon](https://github.com/rossmacarthur/sheldon) as the plugin
-manager:
-
-```toml
-# File: ~/.config/sheldon/plugins.toml
-
-shell = "zsh"
-
-[plugins.zsh-trampoline]
-github = "hernancerm/zsh-trampoline"
-```
-
-### Required configuration
-
-#### First step: Provide widget configuration by defining `ZT_CONFIG`
-
-I recommend defining the Zsh parameter `ZT_CONFIG` in your `~/.zshrc`. In this parameter
-you put your directories and files you want to jump to when pressing <kbd>ctrl+j</kbd>;
-they must already exist in your filesystem. Sample definition:
-
-```text
-# Sample definition. Place in file: ~/.zshrc
-# Put within parentheses the dirs and files you want to jump to.
-
+```bash
+# START: ZSH-TRAMPOLINE
+# Project homepage: https://github.com/hernancerm/zsh-trampoline
+typeset -r zt_git_clone_dir='/usr/local/zsh-trampoline'
+typeset -r zt_gh_url='https://github.com/hernancerm/zsh-trampoline.git'
+# Install zsh-trampoline.
+if ! [[ -d "${zt_git_clone_dir}" ]] git clone "${zt_gh_url}" "${zt_git_clone_dir}"
+source '/usr/local/zsh-trampoline/trampoline.plugin.zsh'
+# Install fzf. Version >=0.45 is required.
+# https://github.com/junegunn/fzf
+if [[ -z $(command -v fzf) ]] brew install fzf
 ZT_CONFIG=(
-  ~/dev/gc
-  ~/dev/temp:0
-  ~/.gitconfig
+  # Place in a new line the directories and files you want to jump to.
+  ~
 )
+# Bind ctrl+j to list the files.
+zt_setup_widget_jump_to_file
+# END: ZSH-TRAMPOLINE
 ```
+
+### I'm on Linux, what now?
+
+- Ensure your shell is Zsh: `echo $SHELL` should include `zsh` in its output.
+- You may use the snippet above but you need to change the package manager to be `apt` or
+  whatever you use, or you can install Homebrew and then you can use the same snippet.
+
+## Parameter `ZT_CONFIG`
 
 Some things to note:
 
-- If your item has whitespace chars, surround it with single quotes.
+- If your dir or file has whitespace chars, surround it with single quotes.
 - Environment variables, defined as `export MY_VAR=~/file/path`, are supported quoted.
   Do not forget to use the `export` keyword. That is, this could be a valid entry in
   `ZT_CONFIG`: `'${MY_VAR}'`. The plugin does the expansion.
@@ -92,42 +82,17 @@ Some things to note:
 - While on fzf, on <kbd>*</kbd> specifically what gets listed is:
   - Allows to toggle between initial listing and items as-are from `ZT_CONFIG`.
 
-#### Second step: Bind the widget on <kbd>ctrl+j</kbd>
+## Integration with other Zsh plugins
 
-To make <kbd>ctrl+j</kbd> do what it's supposed to, you need to add the line
-`zt_setup_widget_jump_to_file` to your `~/.zshrc` **after** sourcing the plugin
-zsh-trampoline. For example, when using Sheldon that is after `eval "$(sheldon source)"`;
-as a second example, on a manual installation without Sheldon, it would be after `source
-path/to/trampoline.plugin.zsh`.
+Integrate with [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
+Binding <kbd>ctrl+j</kbd> is done inside a ZVM function, as below. Do **NOT** call
+`zt_setup_widget_jump_to_file` when integrating with ZVM.
 
-```sh
-# Example of widget setup when using Sheldon for the installation.
-
-eval "$(sheldon source)"
-# Press 'ctrl+j' to cd to a directory.
-zt_setup_widget_jump_to_file
-```
-
-<details>
-  <summary>
-    <b>Use this instead if you want to integrate zsh-trampoline with
-    <a href="https://github.com/jeffreytse/zsh-vi-mode">jeffreytse/zsh-vi-mode</a></b>
-  </summary>
-
-Do **not** call `zt_setup_widget_jump_to_file` as mentioned above, instead call
-`zt_zvm_setup_widget_jump_to_file` inside the function definition of `zvm_after_init`,
-like this:
-
-```sh
-# Example of widget setup when using Sheldon for the installation.
-
-eval "$(sheldon source)"
+```bash
 function zvm_after_init {
-  # In insert mode, press 'ctrl+j' to cd to a directory.
   zt_zvm_setup_widget_jump_to_file
 }
 ```
-</details>
 
 ## Optional configuration
 
