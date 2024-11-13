@@ -10,8 +10,8 @@
 
 This is a plugin for Zsh which shares the same purpose as the popular project
 [zoxide](https://github.com/ajeetdsouza/zoxide): facilitate `cd`ing to commonly visited
-directories. Chiefly different to zoxide, zsh-trampoline is very simple. Instead of using
-a ranking algorithm to try to determine the most likely directory you want to `cd` to,
+directories. Differently to zoxide, zsh-trampoline is very simple. Instead of using a
+ranking algorithm to determine the most likely directory you want to `cd` to,
 zsh-trampoline simply displays all your configured dirs and files in fzf, always in the
 same order.
 
@@ -19,7 +19,7 @@ same order.
 
 Press <kbd>ctrl+j</kbd> to start fzf with directories and files to "jump" to: `cd` or edit
 with `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG` that you need
-to define. See the section [Required configuration](#required-configuration).
+to define.
 
 When fzf starts, press asterisk (<kbd>*</kbd>) to toggle showing only the dirs and files
 explicitly listed in `ZT_CONFIG`. Press <kbd>enter</kbd> and now you are on a different
@@ -28,39 +28,18 @@ directory or editing a file.
 ## Installation
 
 You can use a Zsh plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon)
-for the installation, alternatively use the quick-start snippet below.
+for the installation, alternatively use the steps below.
 
-**If you are in macOS, place this in your `~/.zshrc` and start a new shell. For the
-snippet to work you must already have installed the Xcode Command Line Tools (install with
-`xcode-select --install`) and [Homebrew](https://brew.sh/).**
+- **Step 1.** Install [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git. With
+  [Homebrew](https://brew.sh/): `brew install fzf git`
+- **Step 2.** Clone the zsh-trampoline Git repository by executing the below command:
 
 ```bash
-# START: ZSH-TRAMPOLINE
-# Project homepage: https://github.com/hernancerm/zsh-trampoline
-# Install Git, if not already installed.
-if [[ -z $(command -v git) ]] brew install git
-# Install fzf, if not already installed.
-# https://github.com/junegunn/fzf
-if [[ -z $(command -v fzf) ]] brew install fzf
-# Install zsh-trampoline.
-typeset -r zt_install_dir="${HOME}/.zsh-trampoline/zsh-trampoline"
 git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
-  "${zt_install_dir}" 2> /dev/null
-source "${zt_install_dir}/trampoline.plugin.zsh"
-# zsh-trampoline configuration.
-ZT_CONFIG=(
-  # Place in a new line the dirs and files you want to jump to.
-  ~
-)
-# Bind ctrl+j to start fzf with the files from ZT_CONFIG.
-zt_setup_widget_jump_to_file
-# END: ZSH-TRAMPOLINE
+  "${HOME}/.zsh-trampoline/zsh-trampoline"
 ```
 
-<details>
-  <summary>
-    The snippet is too long! I want a <b>minimal</b> snippet.
-  </summary>
+- **Step 3.** Place the snippet below in your file `~/.zshrc`:
 
 ```bash
 # ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
@@ -72,22 +51,7 @@ ZT_CONFIG=(
 zt_setup_widget_jump_to_file
 ```
 
-**To use this minimal snippet you need:**
-
-- Have installed [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git.
-- Have cloned zsh-trampoline:
-
-```bash
-git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
-  "${HOME}/.zsh-trampoline/zsh-trampoline"
-```
-
-</details>
-
-### I'm on Linux, what now?
-
-- Ensure your shell is Zsh: `echo $SHELL` should include `zsh` in its output.
-- You may use the minimal snippet above (see the collapsible section).
+- **Step 4.** Start a new shell (restart the terminal or open a new tab).
 
 ## Parameter `ZT_CONFIG`
 
