@@ -39,13 +39,14 @@ snippet to work you must already have installed the Xcode Command Line Tools (in
 # Project homepage: https://github.com/hernancerm/zsh-trampoline
 # Install Git, if not already installed.
 if [[ -z $(command -v git) ]] brew install git
-# Install fzf, if not already installed. Version >=0.45 is required.
+# Install fzf, if not already installed.
 # https://github.com/junegunn/fzf
 if [[ -z $(command -v fzf) ]] brew install fzf
 # Install zsh-trampoline.
+typeset -r zt_install_dir="${HOME}/.zsh-trampoline/zsh-trampoline"
 git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
-  "${HOME}/.zsh-trampoline/zsh-trampoline" 2> /dev/null
-source "${zt_git_clone_dir}/trampoline.plugin.zsh"
+  "${zt_install_dir}" 2> /dev/null
+source "${zt_install_dir}/trampoline.plugin.zsh"
 # zsh-trampoline configuration.
 ZT_CONFIG=(
   # Place in a new line the dirs and files you want to jump to.
@@ -58,18 +59,12 @@ zt_setup_widget_jump_to_file
 
 <details>
   <summary>
-    The snippet is too long! I want a shorter snippet.
+    The snippet is too long! I want a <b>minimal</b> snippet.
   </summary>
-
-
-**To use this snippet you should already have installed git and
-[fzf](https://github.com/junegunn/fzf).**
 
 ```bash
 # ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
-git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
-  "${HOME}/.zsh-trampoline/zsh-trampoline" 2> /dev/null
-source "${zt_git_clone_dir}/trampoline.plugin.zsh"
+source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
 ZT_CONFIG=(
   # Place in a new line the dirs and files you want to jump to.
   ~
@@ -77,12 +72,22 @@ ZT_CONFIG=(
 zt_setup_widget_jump_to_file
 ```
 
+**To use this minimal snippet you need:**
+
+- Have installed [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git.
+- Have cloned zsh-trampoline:
+
+```bash
+git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
+  "${HOME}/.zsh-trampoline/zsh-trampoline"
+```
+
 </details>
 
 ### I'm on Linux, what now?
 
 - Ensure your shell is Zsh: `echo $SHELL` should include `zsh` in its output.
-- You may use the shorter snippet above (or the longer one if you use Homebrew).
+- You may use the minimal snippet above (see the collapsible section).
 
 ## Parameter `ZT_CONFIG`
 
