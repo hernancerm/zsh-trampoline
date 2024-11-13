@@ -45,8 +45,8 @@ git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
 # ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
 source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
 ZT_CONFIG=(
-  # Place in a new line the dirs and files you want to jump to.
-  ~
+  # Place each dir and file you want to jump to in a new line.
+  ~ # Example.
 )
 zt_setup_widget_jump_to_file
 ```
