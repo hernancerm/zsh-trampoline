@@ -1,5 +1,3 @@
-# Usage: `source demo/setup.zsh`. Then `Ctrl+j` to start fzf.
-
 # Clean start.
 if [[ -d ~/demo ]]; then
   printf "The directory ${HOME}/demo will be DELETED. Ok (y/n)? "; read confirm
@@ -8,15 +6,12 @@ if [[ -d ~/demo ]]; then
 fi
 
 # Create base items.
-mkdir -p ~/demo/dev/gc
-mkdir -p ~/demo/dev/temp
+mkdir -p ~/demo/work
+mkdir -p ~/demo/my-cool-project
 mkdir -p ~/demo/.dotfiles
+mkdir -p ~/demo/.config
 echo '[init]
   defaultBranch = main
-
-[core]
-  autocrlf = input
-  excludesFile = ~/.gitignore
 
 [alias]
   s = status -s
@@ -24,19 +19,16 @@ echo '[init]
   diffs = diff --staged' > ~/demo/.gitconfig
 
 # Create level-1 sub-dirs.
-mkdir ~/demo/dev/gc/gimp
-mkdir ~/demo/dev/gc/neovim
-mkdir ~/demo/dev/gc/delta
-mkdir ~/demo/dev/gc/fzf
-mkdir ~/demo/dev/temp/plantuml_diagrams
-mkdir ~/demo/dev/temp/quick-http-server
-mkdir ~/demo/.dotfiles/src
-mkdir ~/demo/.dotfiles/resources
+mkdir ~/demo/work/prices-service
+mkdir ~/demo/work/inventory-service
+mkdir ~/demo/work/experimental-frontend
+mkdir ~/demo/work/plantuml-diagrams
+mkdir ~/demo/work/shared-library
 
 # Config.
 ZT_CONFIG=(
-  ~/demo/dev/gc
-  ~/demo/dev/temp:0
+  ~/demo/work
+  ~/demo/my-cool-project:0
   ~/demo/.dotfiles:0
   ~/demo/.gitconfig
 )

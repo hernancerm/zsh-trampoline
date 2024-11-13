@@ -1,8 +1,8 @@
 <div align=center>
   <h1>zsh-trampoline</h1>
   <p>Jump to the places that matter to you.</p>
-  <a href="https://asciinema.org/a/u8NYrKF0RPmeCtzBAhDxdTvZh" target="_blank">
-    <img width=660 src="https://asciinema.org/a/u8NYrKF0RPmeCtzBAhDxdTvZh.svg" />
+  <a href="https://asciinema.org/a/gLdAo5wNcwF1FEC8ZMTZT9krP" target="_blank">
+    <img width=660 src="https://asciinema.org/a/gLdAo5wNcwF1FEC8ZMTZT9krP.svg" />
   </a>
 </div>
 
