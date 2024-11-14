@@ -27,11 +27,8 @@ directory or editing a file.
 
 ## Installation
 
-You can use a Zsh plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon)
-for the installation, alternatively use the steps below.
-
-- **Step 1.** Install [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git. With
-  [Homebrew](https://brew.sh/): `brew install fzf git`
+- **Step 1.** Install [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git.
+  [Homebrew](https://brew.sh/) command: `brew install fzf git`
 - **Step 2.** Clone the zsh-trampoline Git repository by executing the below command:
 
 ```bash
@@ -39,19 +36,30 @@ git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
   "${HOME}/.zsh-trampoline/zsh-trampoline"
 ```
 
-- **Step 3.** Place the snippet below in your file `~/.zshrc`:
+- **Step 3.** Place the below snippet at the end of your file `~/.zshrc`:
 
 ```bash
 # ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
 source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
 ZT_CONFIG=(
   # Place each dir and file you want to jump to in a new line.
-  ~ # Example.
+  ~ # Example, you can remove this line.
 )
 zt_setup_widget_jump_to_file
 ```
 
 - **Step 4.** Start a new shell (restart the terminal or open a new tab).
+
+> [!TIP]
+> If you feel comfortable with shell scripting and plan to install other Zsh plugins, like
+> [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) or
+> [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) , I
+> recommend you use a shell plugin manager like
+> [Sheldon](https://github.com/rossmacarthur/sheldon) for the installation. The plugin
+> manager would be in charge of doing the git clone (step 2) and sourcing the plugin on
+> startup (line beginning with `source` from the snippet of step 3). Using a plugin
+> manager can get more complicated than following the steps above, so if you go this way
+> then ease of setup should not be your priority.
 
 ## Parameter `ZT_CONFIG`
 
