@@ -8,22 +8,16 @@
 
 ## What is this?
 
-This is a plugin for Zsh which shares the same purpose as the popular project
-[zoxide](https://github.com/ajeetdsouza/zoxide): facilitate `cd`ing to commonly visited
-directories. Differently from zoxide, zsh-trampoline is very simple. Instead of using a
-ranking algorithm to determine the most likely directory you want to `cd` to,
-zsh-trampoline simply displays all your configured dirs in fzf, always in the same order.
-Also, with zsh-trampoline you can jump to files as well, not just dirs.
+This is a plugin for Zsh that reduces the time it takes to (a) `cd` to a commonly visited
+dir and to (b) open in an editor a recurring file. The plugin is very simple, it displays
+all your configured dirs and files in fzf, always in the same order.
 
 ## Usage
 
-While on the shell, press <kbd>ctrl+t</kbd> to start fzf with directories and files to
-"jump" to: `cd` or edit with `${EDITOR}`. This list is taken from the global parameter
-`ZT_CONFIG` that you need to define.
-
-While in fzf, press <kbd>ctrl+t</kbd> to toggle showing only the dirs and files explicitly
-listed in `ZT_CONFIG`. Press <kbd>enter</kbd> and now you are on a different directory or
-editing a file.
+While on the shell, press <kbd>ctrl+t</kbd> to start fzf with dirs and files to "jump" to:
+`cd` or open with `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG`
+that you need to define. While in fzf, press <kbd>ctrl+t</kbd> to toggle showing only the
+dirs and files explicitly listed in `ZT_CONFIG`. Press <kbd>enter</kbd> to select.
 
 ## Installation
 
@@ -58,8 +52,10 @@ editing a file.
 If you feel comfortable with shell scripting and plan to install other Zsh plugins, like
 [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode), I recommend you use a shell
 plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon) for the
-installation. The plugin manager would be in charge of doing the git clone (step 2) and
-sourcing the plugin on startup (line beginning with `source` from the snippet of step 3).
+installation. Comparing this approach to the plugin-manager-less approach, the plugin
+manager would be in charge of doing the git clone (step 2) and sourcing the plugin on
+startup (line beginning with `source` from the snippet of step 3, you still need to define
+`ZT_CONFIG` and call `zt_setup_widget_jump_to_file`).
 
 ## Parameter ZT_CONFIG
 
