@@ -10,7 +10,7 @@ function zt_version {
   echo '0.1.1-dev'
 }
 
-typeset ZT_KEY_MAP_JUMP='^j'
+ZT_KEY_MAP_JUMP="${ZT_KEY_MAP_JUMP:-^t}"
 
 # FUNCTIONS
 
@@ -53,7 +53,7 @@ function zt_widget_jump_to_file {
   fi
   local serialization_file="$(serialize_zt_config)"
   local fzf_selection="$(${ZT_PATH}/cmd/zt_print_files ${serialization_file} | fzf \
-    --tiebreak=index --prompt "> " --bind "*:transform:[[ ! {fzf:prompt} =~ \\> ]] &&
+    --tiebreak=index --prompt "> " --bind "ctrl-t:transform:[[ ! {fzf:prompt} =~ \\> ]] &&
         echo 'change-prompt(> )+reload(
           ${ZT_PATH}/cmd/zt_print_files ${serialization_file})' ||
         echo 'change-prompt(< )+reload(
@@ -72,12 +72,12 @@ function zt_widget_jump_to_file {
 # Standard widget setup.
 function zt_setup_widget_jump_to_file {
   zle -N zt_widget_jump_to_file
-  bindkey ${ZT_KEY_MAP_JUMP} zt_widget_jump_to_file
+  bindkey "${ZT_KEY_MAP_JUMP}" zt_widget_jump_to_file
 }
 
 # Setup widget as per zsh-vi-mode requirements.
-# https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings
+# <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
 function zt_zvm_setup_widget_jump_to_file {
   zvm_define_widget zt_widget_jump_to_file
-  zvm_bindkey viins ${ZT_KEY_MAP_JUMP} zt_widget_jump_to_file
+  zvm_bindkey viins "${ZT_KEY_MAP_JUMP}" zt_widget_jump_to_file
 }

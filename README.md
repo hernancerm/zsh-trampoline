@@ -17,13 +17,13 @@ same order.
 
 ## Usage
 
-Press <kbd>ctrl+j</kbd> to start fzf with directories and files to "jump" to: `cd` or edit
-with `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG` that you need
-to define.
+While on the shell, press <kbd>ctrl+t</kbd> to start fzf with directories and files to
+"jump" to: `cd` or edit with `${EDITOR}`. This list is taken from the global parameter
+`ZT_CONFIG` that you need to define.
 
-When fzf starts, press asterisk (<kbd>*</kbd>) to toggle showing only the dirs and files
-explicitly listed in `ZT_CONFIG`. Press <kbd>enter</kbd> and now you are on a different
-directory or editing a file.
+While in fzf, press <kbd>ctrl+t</kbd> to toggle showing only the dirs and files explicitly
+listed in `ZT_CONFIG`. Press <kbd>enter</kbd> and now you are on a different directory or
+editing a file.
 
 ## Installation
 
@@ -69,20 +69,20 @@ Some things to note:
 - Environment variables, defined as `export MY_VAR=~/file/path`, are supported quoted.
   Do not forget to use the `export` keyword. That is, this could be a valid entry in
   `ZT_CONFIG`: `'${MY_VAR}'`. The plugin does the expansion.
-- On <kbd>ctrl+j</kbd> specifically what gets listed is:
+- On <kbd>ctrl+t</kbd> specifically what gets listed is:
   - Files. Quoted env vars which point to a file are listed as the env var.
   - Level 1 sub-dirs of the dirs in `ZT_CONFIG`. Quoted env vars which point to a dir are
     treated as dirs.
   - Anything ending in `:0`. In this case the `:0` is stripped. The purpose of this is to
     be able to list the dirs themselves which are in `ZT_CONFIG`, avoiding the sub-dirs
     replacement.
-- While on fzf, on <kbd>*</kbd> specifically what gets listed is:
+- While in fzf, on <kbd>ctrl+t</kbd> specifically what gets listed is:
   - Allows to toggle between initial listing and items as-are from `ZT_CONFIG`.
 
 ## Integration with other Zsh plugins
 
 Integrate with [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
-Binding <kbd>ctrl+j</kbd> is done inside a ZVM function, as below. Do **NOT** call
+Binding <kbd>ctrl+t</kbd> is done inside a ZVM function, as below. Do **NOT** call
 `zt_setup_widget_jump_to_file` when integrating with ZVM.
 
 ```bash
@@ -107,9 +107,9 @@ Optional configuration is provided through parameters.
 <td><code>ZT_KEY_MAP_JUMP</code></td>
 <td>
 <a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
-<code>bindkey</code> key map</a></td><td><code>^j</code></td>
+<code>bindkey</code> key map</a></td><td><code>^t</code></td>
 <td>
-Key map to list dirs & files in fzf. Default: <kbd>ctrl+j</kbd>
+Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>
 </td>
 </tr>
 </tbody>
