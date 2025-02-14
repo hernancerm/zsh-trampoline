@@ -10,10 +10,10 @@
 
 This is a plugin for Zsh which shares the same purpose as the popular project
 [zoxide](https://github.com/ajeetdsouza/zoxide): facilitate `cd`ing to commonly visited
-directories. Differently to zoxide, zsh-trampoline is very simple. Instead of using a
+directories. Differently from zoxide, zsh-trampoline is very simple. Instead of using a
 ranking algorithm to determine the most likely directory you want to `cd` to,
-zsh-trampoline simply displays all your configured dirs and files in fzf, always in the
-same order.
+zsh-trampoline simply displays all your configured dirs in fzf, always in the same order.
+Also, with zsh-trampoline you can jump to files as well, not just dirs.
 
 ## Usage
 
@@ -27,41 +27,41 @@ editing a file.
 
 ## Installation
 
-- **Step 1.** Install [fzf](https://github.com/junegunn/fzf) version >=0.45 and Git.
-  [Homebrew](https://brew.sh/) command: `brew install fzf git`
-- **Step 2.** Clone the zsh-trampoline Git repository by executing the below command:
+### Without a plugin manager
 
-```bash
-git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
-  "${HOME}/.zsh-trampoline/zsh-trampoline"
-```
+1. Install [fzf](https://github.com/junegunn/fzf) version >=0.45.
+  [Homebrew](https://brew.sh/) command: `brew install fzf`.
+2. Clone the zsh-trampoline Git repository by executing the below command:
 
-- **Step 3.** Place the below snippet at the end of your file `~/.zshrc`:
+    ```text
+    git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
+      "${HOME}/.zsh-trampoline/zsh-trampoline"
+    ```
 
-```bash
-# ZSH-TRAMPOLINE - https://github.com/hernancerm/zsh-trampoline
-source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
-ZT_CONFIG=(
-  # Place each dir and file you want to jump to in a new line.
-  ~ # Example, you can remove this line.
-)
-zt_setup_widget_jump_to_file
-```
+3. Place the below snippet at the end of your file `~/.zshrc`:
 
-- **Step 4.** Start a new shell (restart the terminal or open a new tab).
+    ```text
+    # ZSH-TRAMPOLINE - Start - <https://github.com/hernancerm/zsh-trampoline>.
+    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
+    ZT_CONFIG=(
+      # Place each dir and file you want to jump to in a new line.
+      ~ # Example, you can remove this line.
+    )
+    zt_setup_widget_jump_to_file
+    # ZSH-TRAMPOLINE - End.
+    ```
 
-> [!TIP]
-> If you feel comfortable with shell scripting and plan to install other Zsh plugins, like
-> [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) or
-> [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) , I
-> recommend you use a shell plugin manager like
-> [Sheldon](https://github.com/rossmacarthur/sheldon) for the installation. The plugin
-> manager would be in charge of doing the git clone (step 2) and sourcing the plugin on
-> startup (line beginning with `source` from the snippet of step 3). Using a plugin
-> manager can get more complicated than following the steps above, so if you go this way
-> then ease of setup should not be your priority.
+4. Start a new shell.
 
-## Parameter `ZT_CONFIG`
+### With a plugin manager
+
+If you feel comfortable with shell scripting and plan to install other Zsh plugins, like
+[zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode), I recommend you use a shell
+plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon) for the
+installation. The plugin manager would be in charge of doing the git clone (step 2) and
+sourcing the plugin on startup (line beginning with `source` from the snippet of step 3).
+
+## Parameter ZT_CONFIG
 
 Some things to note:
 
@@ -81,15 +81,15 @@ Some things to note:
 
 ## Integration with other Zsh plugins
 
-Integrate with [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
-Binding <kbd>ctrl+t</kbd> is done inside a ZVM function, as below. Do **NOT** call
+- [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
+Binding <kbd>ctrl+t</kbd> is done inside a specific ZVM function, as below. Do not call
 `zt_setup_widget_jump_to_file` when integrating with ZVM.
 
-```bash
-function zvm_after_init {
-  zt_zvm_setup_widget_jump_to_file
-}
-```
+    ```text
+    function zvm_after_init {
+      zt_zvm_setup_widget_jump_to_file
+    }
+    ```
 
 ## Optional configuration
 
@@ -109,7 +109,7 @@ Optional configuration is provided through parameters.
 <a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
 <code>bindkey</code> key map</a></td><td><code>^t</code></td>
 <td>
-Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>
+Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>.
 </td>
 </tr>
 </tbody>
