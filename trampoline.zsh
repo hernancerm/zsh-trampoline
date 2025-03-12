@@ -14,25 +14,28 @@ ZT_KEY_MAP_JUMP="${ZT_KEY_MAP_JUMP:-^t}"
 
 # FUNCTIONS
 
-## Serialize into a file the current value of the global Zsh parameter ZT_CONFIG.
-## Why: This serialization mechanism is used for the purpose of passing the value of
-##      ZT_CONFIG to the scripts under the `cmd` directory of this repository. The reason
-##      those scripts exist is that fzf executes the command provided in the actions as
-##      `zsh -c '<command>'`, therefore functions in the host shell are not available to
-##      fzf's actions. For the scripts to read the ZT_CONFIG parameter (which is also not
-##      available on actions for the same reason), the parameter definition is serialized.
-##      This preserves quotes on array elements which contain whitespace, which does not
-##      seem possible when trying to pass the definition as a script string argument.
-## @stdout File path of the file which holds the serialization of ZT_CONFIG.
-function serialize_zt_config {
-  zt_config_serialization_file_path='/tmp/ZT_CONFIG.serialization.zsh'
-  typeset -p ZT_CONFIG > "${zt_config_serialization_file_path}"
-  echo "${zt_config_serialization_file_path}"
+## @stdout:string
+function print_configured_files {
+  for raw_file in ${ZT_CONFIG}; do
+    local file_path="${raw_file%%:*}"
+    local file_path_expanded="$(eval echo ${file_path})"
+    if [[ -f "${file_path_expanded}" ]] || [[ ${raw_file[(i):0]} -le ${#raw_file} ]]; then
+      # Pretty print the items which are:
+      # 1. File paths. 2. Env vars pointing to a file path. 3. Items containing ':0'.
+      echo "${file_path}" | sed "s#${HOME}#~#"
+    elif [[ -d "${file_path_expanded}" ]]; then
+      # Print sub-dirs at level-1 the items which are:
+      # 1. Dir paths. 2. Env vars pointing to a dir path.
+      # Note: The dir path itself is not printed.
+      find "${file_path_expanded}" -maxdepth 1 -type d \
+        | sed 1d | sed "s#${HOME}#~#" | sort
+    fi
+  done
 }
 
 ## Assigns a value to the global Zsh parameter BUFFER. Documentation on this parameter:
 ## https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#User_002dDefined-Widgets
-## @param $1 Chosen file path to jump to. It might contain whitespace.
+## @param:string $1 Chosen fs path to jump to. It might contain whitespace.
 function assign_buffer_contents {
   local file_path="${1}"
   if [[ -d "${1}" ]] local cmd='cd'
@@ -51,13 +54,7 @@ function zt_widget_jump_to_file {
     zle accept-line
     return 1
   fi
-  local serialization_file="$(serialize_zt_config)"
-  local fzf_selection="$(${ZT_PATH}/cmd/zt_print_files ${serialization_file} | fzf \
-    --tiebreak=index --prompt "> " --bind "ctrl-t:transform:[[ ! {fzf:prompt} =~ \\> ]] &&
-        echo 'change-prompt(> )+reload(
-          ${ZT_PATH}/cmd/zt_print_files ${serialization_file})' ||
-        echo 'change-prompt(< )+reload(
-          ${ZT_PATH}/cmd/zt_print_files_flat ${serialization_file})'")"
+  local fzf_selection="$(print_configured_files | fzf --tiebreak=index)"
   if [[ -z "${fzf_selection}" ]]; then
     zle reset-prompt
     return

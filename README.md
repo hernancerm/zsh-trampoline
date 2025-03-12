@@ -8,16 +8,16 @@
 
 ## What is this?
 
-This is a plugin for Zsh that reduces the time it takes to (a) `cd` to a commonly visited
-dir and to (b) open in an editor a recurring file. The plugin is very simple, it displays
-all your configured dirs and files in fzf, always in the same order.
+This is a Zsh plugin to efficiently `cd` to commonly visited dirs. The plugin displays all
+your configured dirs in fzf always in the same order. Think of it like a super simple
+[zoxide](https://github.com/ajeetdsouza/zoxide) just for Zsh. The plugin can also open
+files in `$EDITOR`.
 
 ## Usage
 
 While on the shell, press <kbd>ctrl+t</kbd> to start fzf with dirs and files to "jump" to:
-`cd` or open with `${EDITOR}`. This list is taken from the global parameter `ZT_CONFIG`
-that you need to define. While in fzf, press <kbd>ctrl+t</kbd> to toggle showing only the
-dirs and files explicitly listed in `ZT_CONFIG`. Press <kbd>enter</kbd> to select.
+`cd` or open with `$EDITOR`. This list is taken from `$ZT_CONFIG` that you need to define.
+Press <kbd>enter</kbd> to select.
 
 ## Installation
 
@@ -62,18 +62,16 @@ startup (line beginning with `source` from the snippet of step 3, you still need
 Some things to note:
 
 - If your dir or file has whitespace chars, surround it with single quotes.
-- Environment variables, defined as `export MY_VAR=~/file/path`, are supported quoted.
-  Do not forget to use the `export` keyword. That is, this could be a valid entry in
-  `ZT_CONFIG`: `'${MY_VAR}'`. The plugin does the expansion.
-- On <kbd>ctrl+t</kbd> specifically what gets listed is:
+- Environment variables, defined as `export MY_VAR=~/file/path`, are supported quoted. Do
+  not forget the `export` keyword. That is, this could be a valid entry in `ZT_CONFIG`:
+  `'${MY_VAR}'`. The plugin does the expansion.
+- On <kbd>ctrl+t</kbd> what gets listed is:
   - Files. Quoted env vars which point to a file are listed as the env var.
   - Level 1 sub-dirs of the dirs in `ZT_CONFIG`. Quoted env vars which point to a dir are
     treated as dirs.
   - Anything ending in `:0`. In this case the `:0` is stripped. The purpose of this is to
     be able to list the dirs themselves which are in `ZT_CONFIG`, avoiding the sub-dirs
     replacement.
-- While in fzf, on <kbd>ctrl+t</kbd> specifically what gets listed is:
-  - Allows to toggle between initial listing and items as-are from `ZT_CONFIG`.
 
 ## Integration with other Zsh plugins
 
