@@ -1,5 +1,5 @@
 # zsh-trampoline -- Jump to the places that matter to you.
-# https://github.com/hernancerm/zsh-trampoline
+# Homepage: <https://github.com/hernancerm/zsh-trampoline>.
 
 # Do not source this script multiple times.
 command -v zt_version > /dev/null && return
@@ -10,7 +10,7 @@ function zt_version {
   echo '0.1.1-dev'
 }
 
-ZT_KEY_MAP_JUMP="${ZT_KEY_MAP_JUMP:-^t}"
+ZT_KEY_MAP_START="${ZT_KEY_MAP_START:-^t}"
 
 # FUNCTIONS
 
@@ -48,7 +48,7 @@ function assign_buffer_contents {
 # WIDGETS
 
 # List files in fzf and jump to the selected one.
-function zt_widget_jump_to_file {
+function zt_widget {
   if [[ ${+ZT_CONFIG} -eq 0 ]]; then
     printf 'No configuration source. Export the Zsh parameter `ZT_CONFIG`.' 1>&2
     zle accept-line
@@ -67,14 +67,14 @@ function zt_widget_jump_to_file {
 }
 
 # Standard widget setup.
-function zt_setup_widget_jump_to_file {
-  zle -N zt_widget_jump_to_file
-  bindkey "${ZT_KEY_MAP_JUMP}" zt_widget_jump_to_file
+function zt_setup_widget {
+  zle -N zt_widget
+  bindkey "${ZT_KEY_MAP_START}" zt_widget
 }
 
 # Setup widget as per zsh-vi-mode requirements.
 # <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
-function zt_zvm_setup_widget_jump_to_file {
-  zvm_define_widget zt_widget_jump_to_file
-  zvm_bindkey viins "${ZT_KEY_MAP_JUMP}" zt_widget_jump_to_file
+function zt_zvm_setup_widget {
+  zvm_define_widget zt_widget
+  zvm_bindkey viins "${ZT_KEY_MAP_START}" zt_widget
 }

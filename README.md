@@ -41,7 +41,7 @@ Press <kbd>enter</kbd> to select.
       # Place each dir and file you want to jump to in a new line.
       ~ # Example, you can remove this line.
     )
-    zt_setup_widget_jump_to_file
+    zt_setup_widget
     # ZSH-TRAMPOLINE - End.
     ```
 
@@ -55,7 +55,7 @@ plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon) for the
 installation. Comparing this approach to the plugin-manager-less approach, the plugin
 manager would be in charge of doing the git clone (step 2) and sourcing the plugin on
 startup (line beginning with `source` from the snippet of step 3, you still need to define
-`ZT_CONFIG` and call `zt_setup_widget_jump_to_file`).
+`ZT_CONFIG` and call `zt_setup_widget`).
 
 ## Parameter ZT_CONFIG
 
@@ -77,11 +77,11 @@ Some things to note:
 
 - [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
 Binding <kbd>ctrl+t</kbd> is done inside a specific ZVM function, as below. Do not call
-`zt_setup_widget_jump_to_file` when integrating with ZVM.
+`zt_setup_widget` when integrating with ZVM.
 
     ```text
     function zvm_after_init {
-      zt_zvm_setup_widget_jump_to_file
+      zt_zvm_setup_widget
     }
     ```
 
@@ -98,7 +98,7 @@ Optional configuration is provided through parameters.
 </thead>
 <tbody>
 <tr>
-<td><code>ZT_KEY_MAP_JUMP</code></td>
+<td><code>ZT_KEY_MAP_START</code></td>
 <td>
 <a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
 <code>bindkey</code> key map</a></td><td><code>^t</code></td>
