@@ -1,15 +1,14 @@
-<div align=center>
-  <h1>zsh-trampoline</h1>
-  <p>Jump to the places that matter to you.</p>
-  <a href="https://asciinema.org/a/gLdAo5wNcwF1FEC8ZMTZT9krP" target="_blank">
-    <img width=660 src="https://asciinema.org/a/gLdAo5wNcwF1FEC8ZMTZT9krP.svg" />
-  </a>
-</div>
+# zsh-trampoline
+
+Zsh plugin leveraging [fzf](https://github.com/junegunn/fzf) to jump to the places that
+matter to you.
+
+[![asciicast](https://asciinema.org/a/716276.svg)](https://asciinema.org/a/716276)
 
 ## What is this?
 
 This is a Zsh plugin to efficiently `cd` to commonly visited dirs. The plugin displays all
-your configured dirs in fzf always in the same order. Think of it like a super simple
+your configured dirs in fzf always in the same order. Think of it like a simple
 [zoxide](https://github.com/ajeetdsouza/zoxide) just for Zsh. The plugin can also open
 files in `$EDITOR`.
 
