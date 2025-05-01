@@ -6,6 +6,7 @@ command -v zt_version > /dev/null && return
 
 # CONFIGURATION
 
+## Get the version.
 function zt_version {
   echo '0.1.1-dev'
 }
@@ -14,21 +15,27 @@ ZT_KEY_MAP_START="${ZT_KEY_MAP_START:-^t}"
 
 # FUNCTIONS
 
+## Generate items (files and dirs) as per ZT_CONFIG.
+## $1:string Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
-function print_configured_files {
+function zt_get_items {
   for raw_file in ${ZT_CONFIG}; do
-    local file_path="${raw_file%%:*}"
-    local file_path_expanded="$(eval echo ${file_path})"
-    if [[ -f "${file_path_expanded}" ]] || [[ ${raw_file[(i):0]} -le ${#raw_file} ]]; then
-      # Pretty print the items which are:
-      # 1. File paths. 2. Env vars pointing to a file path. 3. Items containing ':0'.
-      echo "${file_path}" | sed "s#${HOME}#~#"
-    elif [[ -d "${file_path_expanded}" ]]; then
-      # Print sub-dirs at level-1 the items which are:
-      # 1. Dir paths. 2. Env vars pointing to a dir path.
-      # Note: The dir path itself is not printed.
-      find "${file_path_expanded}" -maxdepth 1 -type d \
-        | sed 1d | sed "s#${HOME}#~#" | sort
+    local filepath="${raw_file%%:*}"
+    local filepath_expanded="$(eval echo ${filepath})"
+    if [[ -f "${filepath_expanded}" ]]; then
+      if [[ -z "${1}" ]] || [[ "${1}" = 'f' ]]; then # Filter.
+        echo "${filepath}" | sed "s#${HOME}#~#"
+      fi
+    elif [[ -d "${filepath_expanded}" ]]; then
+      if [[ -z "${1}" ]] || [[ "${1}" = 'd' ]]; then # Filter.
+        if [[ ${raw_file[(i):0]} -lt ${#raw_file} ]]; then
+          echo "${filepath}" | sed "s#${HOME}#~#"
+        else
+          # Expand level-1 sub dirs.
+          find "${filepath_expanded}" -maxdepth 1 -type d \
+            | sed 1d | sed "s#${HOME}#~#" | sort
+        fi
+      fi
     fi
   done
 }
@@ -36,44 +43,47 @@ function print_configured_files {
 ## Assigns a value to the global Zsh parameter BUFFER. Documentation on this parameter:
 ## https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#User_002dDefined-Widgets
 ## @param:string $1 Chosen fs path to jump to. It might contain whitespace.
-function assign_buffer_contents {
-  local file_path="${1}"
+function _zt_assign_buffer {
+  local filepath="${1}"
   if [[ -d "${1}" ]] local cmd='cd'
   if [[ -f "${1}" ]] local cmd="${EDITOR:-vim}"
   # When the file path has a whitespace char, surround it with single quotes.
-  if [[ ${1[(i) ]} -le ${#1} ]] file_path="'${1}'"
-  BUFFER="${cmd} ${file_path}"
+  if [[ ${1[(i) ]} -le ${#1} ]] filepath="'${1}'"
+  BUFFER="${cmd} ${filepath}"
 }
 
 # WIDGETS
 
-# List files in fzf and jump to the selected one.
+## Zsh widget.
+## List files in fzf and jump to the selected one.
 function zt_widget {
   if [[ ${+ZT_CONFIG} -eq 0 ]]; then
     printf 'No configuration source. Export the Zsh parameter `ZT_CONFIG`.' 1>&2
     zle accept-line
     return 1
   fi
-  local fzf_selection="$(print_configured_files | fzf --tiebreak=index)"
+  local fzf_selection="$(zt_get_items | fzf --tiebreak=index)"
   if [[ -z "${fzf_selection}" ]]; then
     zle reset-prompt
     return
   fi
   # Expand the tilde symbol (~) and environment variables.
-  local file_path="$(eval echo ${fzf_selection})"
-  assign_buffer_contents "${file_path}"
+  local filepath="$(eval echo ${fzf_selection})"
+  _zt_assign_buffer "${filepath}"
   zle accept-line
   zle reset-prompt
 }
 
-# Standard widget setup.
+## Users without ZVM (zsh-vi-mode) should use this.
+## Setup widget without integrating with other plugins.
 function zt_setup_widget {
   zle -N zt_widget
   bindkey "${ZT_KEY_MAP_START}" zt_widget
 }
 
-# Setup widget as per zsh-vi-mode requirements.
-# <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
+## ZVM users should use this.
+## Setup widget as per zsh-vi-mode requirements.
+## <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
 function zt_zvm_setup_widget {
   zvm_define_widget zt_widget
   zvm_bindkey viins "${ZT_KEY_MAP_START}" zt_widget

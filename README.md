@@ -108,6 +108,16 @@ Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>.
 </tbody>
 </table>
 
+## API
+
+(fn) `zt_get_items`:
+
+```text
+## Generate items (files and dirs) as per ZT_CONFIG.
+## $1:string Item type filter, either 'd' for directory or 'f' for file.
+## @stdout:string
+```
+
 ## Similar projects
 
 - <https://github.com/ajeetdsouza/zoxide>
