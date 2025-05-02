@@ -113,7 +113,7 @@ Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>.
 (fn) `zt_get_items`:
 
 ```text
-## Generate items (files and dirs) as per ZT_CONFIG.
+## Generate items (files and dirs) as per the config.
 ## $1:string Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
 ```

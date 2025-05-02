@@ -71,25 +71,13 @@ function zt_get_items {
   done
 }
 
-## Assigns a value to the global Zsh parameter BUFFER. Documentation on this parameter:
-## https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#User_002dDefined-Widgets
-## @param:string $1 Chosen fs path to jump to. It might contain whitespace.
-function _zt_assign_buffer {
-  local filepath="${1}"
-  if [[ -d "${1}" ]] local cmd='cd'
-  if [[ -f "${1}" ]] local cmd="${EDITOR:-vim}"
-  # When the file path has a whitespace char, surround it with single quotes.
-  if [[ ${1[(i) ]} -le ${#1} ]] filepath="'${1}'"
-  BUFFER="${cmd} ${filepath}"
-}
-
 # WIDGETS
 
 ## Zsh widget.
 ## List files in fzf and jump to the selected one.
 function zt_widget {
   if [[ $(zt_get_config_source) -eq 0 ]]; then
-    printf 'No configuration source. Export the Zsh parameter `ZT_CONFIG`.' 1>&2
+    printf 'No configuration source' 1>&2
     zle accept-line
     return 1
   fi
@@ -100,9 +88,18 @@ function zt_widget {
   fi
   # Expand the tilde symbol (~) and environment variables.
   local filepath="$(eval echo ${fzf_selection})"
-  _zt_assign_buffer "${filepath}"
+  if [[ -d "${filepath}" ]]; then
+    local cmd='cd'
+  fi
+  if [[ -f "${filepath}" ]]; then
+    local cmd="${EDITOR:-vim}"
+  fi
+  if [[ ${filepath[(i) ]} -le ${#filepath} ]]; then
+    # When the filepath has a whitespace char, surround it with single quotes.
+    filepath="'${filepath}'"
+  fi
+  BUFFER="${cmd} ${filepath}"
   zle accept-line
-  zle reset-prompt
 }
 
 ## Users without ZVM (zsh-vi-mode) should use this.
