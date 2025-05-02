@@ -99,6 +99,7 @@ function zt_widget {
     filepath="'${filepath}'"
   fi
   BUFFER="${cmd} ${filepath}"
+  zle reset-prompt
   zle accept-line
 }
 
