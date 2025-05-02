@@ -11,15 +11,40 @@ function zt_version {
   echo '0.1.1-dev'
 }
 
+ZT_CONFIG_FILE="${HOME}/.config/zsh-trampoline/config.txt"
 ZT_KEY_MAP_START="${ZT_KEY_MAP_START:-^t}"
 
 # FUNCTIONS
 
-## Generate items (files and dirs) as per ZT_CONFIG.
+## @stdout:int Config source.
+##             1: Config stored in the ZT_CONFIG Zsh param.
+##             2: Config stored in the config file `~/.config/zsh-trampoline/config.zsh`.
+##             0: No config source registered.
+function zt_get_config_source {
+  if [[ ${+ZT_CONFIG} -eq 1 ]]; then
+    echo 1
+  elif [[ -f "${ZT_CONFIG_FILE}" ]]; then
+    echo 2
+  else
+    echo 0
+  fi
+}
+
+## Generate items (files and dirs) as per the config.
 ## $1:string Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
 function zt_get_items {
-  for raw_file in ${ZT_CONFIG}; do
+  local -a zt_config
+  local config_source=$(zt_get_config_source)
+  if [[ "${config_source}" -eq 1 ]]; then
+    zt_config=(${ZT_CONFIG})
+  elif [[ "${config_source}" -eq 2 ]]; then
+    local single_line_config="$(cat "${ZT_CONFIG_FILE}")"
+    zt_config=(${(f)single_line_config})
+  else
+    return
+  fi
+  for raw_file in ${zt_config}; do
     local filepath="${raw_file%%:*}"
     local filepath_expanded="$(eval echo ${filepath})"
     if [[ -f "${filepath_expanded}" ]]; then
@@ -57,7 +82,7 @@ function _zt_assign_buffer {
 ## Zsh widget.
 ## List files in fzf and jump to the selected one.
 function zt_widget {
-  if [[ ${+ZT_CONFIG} -eq 0 ]]; then
+  if [[ $(zt_get_config_source) -eq 0 ]]; then
     printf 'No configuration source. Export the Zsh parameter `ZT_CONFIG`.' 1>&2
     zle accept-line
     return 1
