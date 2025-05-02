@@ -12,6 +12,7 @@ function zt_version {
 }
 
 ZT_CONFIG_FILE="${HOME}/.config/zsh-trampoline/config.txt"
+ZT_CONFIG_SECRET_FILE="${HOME}/.config/zsh-trampoline/config_secret.txt"
 ZT_KEY_MAP_START="${ZT_KEY_MAP_START:-^t}"
 
 # FUNCTIONS
@@ -41,6 +42,11 @@ function zt_get_items {
   elif [[ "${config_source}" -eq 2 ]]; then
     local single_line_config="$(cat "${ZT_CONFIG_FILE}")"
     zt_config=(${(f)single_line_config})
+    if [[ -f "${ZT_CONFIG_SECRET_FILE}" ]]; then
+      local single_line_config_secret="$(cat "${ZT_CONFIG_SECRET_FILE}")"
+      local zt_config_secret=(${(f)single_line_config_secret})
+      zt_config+=(${zt_config_secret})
+    fi
   else
     return
   fi
