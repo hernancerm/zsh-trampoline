@@ -81,7 +81,12 @@ function zt_widget {
     zle accept-line
     return 1
   fi
-  local fzf_selection="$(zt_get_items | fzf --tiebreak=index)"
+  local fzf_height='~100%'
+  local items="$(zt_get_items)"
+  if [[ "${#${(f)items}}" -ge "$(tput lines)" ]]; then
+    fzf_height='-1'
+  fi
+  local fzf_selection="$(echo "${items}" | fzf --height="${fzf_height}" --tiebreak=index)"
   if [[ -z "${fzf_selection}" ]]; then
     zle reset-prompt
     return
