@@ -133,9 +133,8 @@ should have two lines: <code>~/dev/gr</code> as the first line, and
 <tr>
 <td>Any filepath</td>
 <td><code>~/.config/zsh-trampoline/config_secret.txt</code></td>
-<td>Used when <code>ZT_CONFIG_FILE</code> is used and expects the same file contents as
-the file pointed to by <code>ZT_CONFIG_FILE</code>. The configuration here is appended to
-the main config file.</td>
+<td>Used when <code>ZT_CONFIG_FILE</code> is used and expects the same file content
+structure. The configuration here is appended to the main config file.</td>
 </tr>
 </tbody>
 </table>
