@@ -38,7 +38,7 @@ Press <kbd>enter</kbd> to select.
     source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
     ZT_CONFIG=(
       # Place each dir and file you want to jump to in a new line.
-      ~ # Example, you can remove this line.
+      ~ # Example, you likely want to remove this line.
     )
     zt_setup_widget
     # ZSH-TRAMPOLINE - End.
@@ -58,6 +58,18 @@ startup (line beginning with `source` from the snippet of step 3, you still need
 
 ## Parameter ZT_CONFIG
 
+Example definition:
+
+```text
+ZT_CONFIG=(
+  ~/dev/gc
+  ~/dev/gr
+  ~/.dotfiles:0
+  ~/dev/temp:0
+  ${HISTFILE}
+)
+```
+
 Some things to note:
 
 - If your dir or file has whitespace chars, surround it with single quotes.
@@ -69,8 +81,7 @@ Some things to note:
   - Level 1 sub-dirs of the dirs in `ZT_CONFIG`. Quoted env vars which point to a dir are
     treated as dirs.
   - Anything ending in `:0`. In this case the `:0` is stripped. The purpose of this is to
-    be able to list the dirs themselves which are in `ZT_CONFIG`, avoiding the sub-dirs
-    replacement.
+    be able to list the dirs themselves instead of doing the level-1 sub-dirs expansion.
 
 ## Integration with other Zsh plugins
 
@@ -86,18 +97,59 @@ Binding <kbd>ctrl+t</kbd> is done inside a specific ZVM function, as below. Do n
 
 ## Optional configuration
 
-Optional configuration is provided through parameters.
+(param) `ZT_CONFIG_FILE`:
 
 <table>
 <thead>
 <tr>
-<th>Zsh parameters</th><th>Allowed values</th>
-<th>Default value</th><th>Description</th>
+<th>Allowed values</th><th>Default value</th><th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ZT_KEY_MAP_START</code></td>
+<td>Any filepath</td>
+<td><code>~/.config/zsh-trampoline/config.txt</code></td>
+<td>
+Alternate configuration source to the <code>ZT_CONFIG</code> parameter. The contents of
+the file are the contents of the <code>ZT_CONFIG</code> param, with one item per line.
+For example, if <code>ZT_CONFIG=(~/dev/gr ~/dev/temp:0)</code>, then <code>config.txt</code>
+should have two lines: <code>~/dev/gr</code> as the first line, and
+<code>~/dev/temp:0</code> as the second line. This config file is only used when
+<code>ZT_CONFIG</code> is unset.
+</td>
+</tr>
+</tbody>
+</table>
+
+(param) `ZT_CONFIG_FILE_SECRET`:
+
+<table>
+<thead>
+<tr>
+<th>Allowed values</th><th>Default value</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Any filepath</td>
+<td><code>~/.config/zsh-trampoline/config_secret.txt</code></td>
+<td>Used when <code>ZT_CONFIG_FILE</code> is used and expects the same file contents as
+the file pointed to by <code>ZT_CONFIG_FILE</code>. The configuration here is appended to
+the main config file.</td>
+</tr>
+</tbody>
+</table>
+
+(param) `ZT_KEY_MAP_START`:
+
+<table>
+<thead>
+<tr>
+<th>Allowed values</th><th>Default value</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td>
 <a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
 <code>bindkey</code> key map</a></td><td><code>^t</code></td>
@@ -113,8 +165,8 @@ Key map to list dirs & files in fzf. Default: <kbd>ctrl+t</kbd>.
 (fn) `zt_get_items`:
 
 ```text
-## Generate items (files and dirs) as per the config.
-## $1:string Item type filter, either 'd' for directory or 'f' for file.
+## Get the list of the configured items, optionally filtering by type.
+## @param $1:string (optional) Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
 ```
 

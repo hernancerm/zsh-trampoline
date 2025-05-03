@@ -31,8 +31,8 @@ function zt_get_config_source {
   fi
 }
 
-## Generate items (files and dirs) as per the config.
-## $1:string Item type filter, either 'd' for directory or 'f' for file.
+## Get the list of the configured items, optionally filtering by type.
+## @param $1:string (optional) Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
 function zt_get_items {
   local -a zt_config
