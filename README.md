@@ -96,7 +96,9 @@ Explanation of the config file's syntax:
 
 ## Optional configuration
 
-Parameter: `ZT_KEY_MAP_START`:
+Parameter: `ZT_KEYBIND_START`:
+
+TODO: Update name of param in plugin file.
 
 <table>
 <thead>
