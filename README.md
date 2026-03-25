@@ -52,14 +52,14 @@ startup (line beginning with `source` from the snippet of step 3), you still nee
 
 ## Configuration file
 
-zsh-trampoline supports two cofiguration files which are merged (they do not shadow each
-other):
+zsh-trampoline supports two config files:
 
-1. `~/.config/zsh-trampoline/config.txt`
-2. `~/.config/zsh-trampoline/config.local.txt` (used for local config, shouldn't be
-   committed to source control.)
+1. `~/.zt`
+2. `~/.zt.local` (used for local config, should not be committed to source control.)
 
-TODO: Support ${XDG_CONFIG_HOME}.
+The configs are merged in order, no overrides. I recommend using the first config file for
+common dirs/files in your setup, while the second config file for sensitive or
+machine-specific dirs/files. Both files share the same syntax.
 
 Example contents of the config file:
 
@@ -72,7 +72,7 @@ ${HISTFILE}
 
 TODO: Support dirs and files with spaces in the config file.
 
-Explanation of the contents of the config file:
+Explanation of the config file's syntax:
 
 - Each line has only one directory or one file.
 - Directories are expanded to their level-1 sub-dirs.
