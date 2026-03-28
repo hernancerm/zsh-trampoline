@@ -119,6 +119,13 @@ Key binding to list dirs & files in fzf.
 </tbody>
 </table>
 
+## Functions
+
+- `zt_version`
+- `zt_get_items`
+- `zt_setup_widget`
+- `zt_zvm_setup_widget`
+
 ## Similar projects
 
 - <https://github.com/ajeetdsouza/zoxide>
