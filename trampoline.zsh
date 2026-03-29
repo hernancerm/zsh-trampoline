@@ -48,9 +48,7 @@ function zt_get_items {
 
 # WIDGET
 
-## Zsh widget.
-## List files in fzf and jump to the selected one.
-function zt_widget {
+function _zt_widget {
   if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]]; then
     printf 'ERROR: No config file found for zsh-trampoline, no ~/.zt or ~/.zt.local' 1>&2
     zle accept-line
@@ -79,17 +77,15 @@ function zt_widget {
   zle accept-line
 }
 
-## Users without ZVM (zsh-vi-mode) should use this.
-## Setup widget without integrating with other plugins.
+# Standard widget setup.
 function zt_setup_widget {
-  zle -N zt_widget
-  bindkey "${ZT_KEYBIND_START}" zt_widget
+  zle -N _zt_widget
+  bindkey "${ZT_KEYBIND_START}" _zt_widget
 }
 
-## ZVM users should use this.
-## Setup widget as per zsh-vi-mode requirements.
-## <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
+# Setup widget as per zsh-vi-mode requirements.
+# <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
 function zt_zvm_setup_widget {
-  zvm_define_widget zt_widget
-  zvm_bindkey viins "${ZT_KEYBIND_START}" zt_widget
+  zvm_define_widget _zt_widget
+  zvm_bindkey viins "${ZT_KEYBIND_START}" _zt_widget
 }
