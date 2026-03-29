@@ -1,9 +1,6 @@
 # zsh-trampoline
 
-> [!WARNING]
-> In-progress README.md changes. For accurate documentation refer to the latest release.
-
-Zsh plugin leveraging [fzf](https://github.com/junegunn/fzf) to jump to dirs and files.
+Zsh + [fzf](https://github.com/junegunn/fzf) for filesystem navigation.
 
 ## What is this?
 
@@ -66,18 +63,20 @@ Example contents of the config file:
 ```text
 ~/dev/work
 ~/dev/temp:0
-~/dev/Some Directory With Spaces:0
+~/dev/Some Dir With Spaces:0
+~/dev/Another Dir With Spaces
 ${HISTFILE}
+$HOME/foo/
 ```
-
-TODO: Support dirs and files with spaces in the config file.
 
 Explanation of the config file's syntax:
 
-- Each line has only one directory or one file.
-- Directories are expanded to their level-1 sub-dirs.
-- Directories may be suffixed with `:0`. This prevents the level-1 sub-dirs expansion.
-- The tilde (`~`) character is supported. It's expanded to the user home directory.
+- Each line has the absolute path of one directory or one file.
+- By default, directories are expanded to their level-1 sub-dirs.
+- Directories may be suffixed with `:0` to list the dir itself instead of its level-1
+  sub-dirs.
+- Paths containing a colon (`:`) character are not supported.
+- The tilde (`~`) character is expanded to the user home directory.
 - Environment variables are supported.
 
 ## Integration with other Zsh plugins
@@ -97,8 +96,6 @@ Explanation of the config file's syntax:
 ## Optional configuration
 
 Parameter: `ZT_KEYBIND_START`:
-
-TODO: Update name of param in plugin file.
 
 <table>
 <thead>
