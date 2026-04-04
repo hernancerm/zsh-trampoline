@@ -54,7 +54,7 @@ function _zt_widget {
     zle accept-line
     return 1
   fi
-  local fzf_selection="$(zt_get_items | fzf --height="~$(($(tput lines) - 1))")"
+  local fzf_selection="$(zt_get_items | fzf)"
   if [[ -z "${fzf_selection}" ]]; then
     zle reset-prompt
     return
