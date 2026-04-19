@@ -51,12 +51,12 @@ function zt_get_items {
 function _zt_widget {
   if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]]; then
     printf 'ERROR: No config file found for zsh-trampoline, no ~/.zt or ~/.zt.local' 1>&2
-    zle accept-line
+    zle .accept-line
     return 1
   fi
   local fzf_selection="$(zt_get_items | fzf)"
   if [[ -z "${fzf_selection}" ]]; then
-    zle reset-prompt
+    zle .reset-prompt
     return
   fi
   # Expand the tilde symbol (~) and environment variables.
@@ -72,8 +72,8 @@ function _zt_widget {
     filepath="'${filepath}'"
   fi
   BUFFER="${cmd} ${filepath}"
-  zle reset-prompt
-  zle accept-line
+  zle .reset-prompt
+  zle .accept-line
 }
 
 # Standard widget setup.
