@@ -9,8 +9,7 @@ This is a zsh plugin to facilitate two use cases:
 1. `cd` to commonly visited directories.
 2. Open in `$EDITOR` commonly visited files.
 
-After sourcing the plugin this keybind is created (given `ZT_SET_KEYBINDS=1` which is
-default):
+After sourcing the plugin this keybind is set:
 
 - <kbd>Ctrl-t</kbd> List [configured](#configuration-file) directories and files in fzf.
 
