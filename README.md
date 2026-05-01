@@ -1,58 +1,81 @@
 # zsh-trampoline
 
-Zsh + [fzf](https://github.com/junegunn/fzf) for filesystem navigation.
+zsh + [fzf](https://github.com/junegunn/fzf) for filesystem navigation.
 
 ## What is this?
 
-This is a Zsh plugin to efficiently `cd` to commonly visited dirs, and also open in
-`$EDITOR` commonly visited files. The plugin displays all your configured dirs and files
-in fzf always in the same order.
+This is a zsh plugin to facilitate two use cases:
 
-## How do I use this?
+1. `cd` to commonly visited directories.
+2. Open in `$EDITOR` commonly visited files.
 
-Before using zsh-trampoline, you need to create a [configuration
-file](#configuration-file). After that, while in a Zsh prompt, press <kbd>ctrl+t</kbd> to
-start fzf with dirs and files to "jump" to: `cd` or open with `$EDITOR`. This list is
-taken from your config file. Press <kbd>enter</kbd> to jump to your selection.
+After sourcing the plugin this keybind is created (given `ZT_SET_KEYBINDS=1` which is
+default):
+
+- <kbd>Ctrl-t</kbd> List [configured](#configuration-file) directories and files in fzf.
 
 ## Installation
 
 ### Without a plugin manager
 
-1. Install [fzf](https://github.com/junegunn/fzf) version >= 0.45.
+1. Install [fzf](https://github.com/junegunn/fzf).
 
-2. Clone the zsh-trampoline Git repository by executing the below command:
+2. Clone the zsh-git repository by executing the below command:
 
-    ```text
+    ```bash
     git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
       "${HOME}/.zsh-trampoline/zsh-trampoline"
     ```
 
-3. Place the below snippet at the end of your file `~/.zshrc`:
+3. Source the plugin (also add command to your `~/.zshrc` to enable on future sessions):
 
-    ```text
-    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
-    zt_setup_widget
+    ```bash
+    source "${HOME}/.zsh-trampoline/zsh-trampoline"
     ```
 
-4. Start a new shell.
+    OR: If you want to set a custom keybind then use:
+
+    ```bash
+    ZT_SET_KEYBINDS=0
+    source "${HOME}/.zsh-trampoline/zsh-trampoline"
+    bindkey "^t" zt-jump
+    ```
+
+    OR: If you use [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode):
+
+    ```bash
+    ZT_SET_KEYBINDS=0
+    source "${HOME}/.zsh-trampoline/zsh-trampoline"
+    function zvm_after_init {
+      zvm_define_widget zt-jump
+      zvm_bindkey viins "^t" zt-jump
+    }
+    ```
 
 ### With a plugin manager
 
-If you feel comfortable with shell scripting and plan to install other Zsh plugins, like
-[zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode), I recommend you use a shell
-plugin manager like [Sheldon](https://github.com/rossmacarthur/sheldon) for the
-installation. Comparing this approach to the plugin-manager-less approach, the plugin
-manager would be in charge of doing the git clone (step 2) and sourcing the plugin on
-startup (line beginning with `source` from the snippet of step 3), you still need to call
-`zt_setup_widget`.
+With [Sheldon](https://github.com/rossmacarthur/sheldon):
+
+```toml
+[plugins.zsh-trampoline]
+github = "hernancerm/zsh-trampoline"
+
+# File: ~/.config/sheldon/plugins.toml
+```
+
+```bash
+# Source plugins.
+eval "$(sheldon source)"
+
+# File: ~/.zshrc
+```
 
 ## Configuration file
 
 zsh-trampoline supports two config files:
 
 1. `~/.zt`
-2. `~/.zt.local` (used for local config, should not be committed to source control.)
+2. `~/.zt.local` (for what you don't want to commit to source control.)
 
 The configs are merged in order, no overrides. I recommend using the first config file for
 common dirs/files in your setup, while the second config file for sensitive or
@@ -78,50 +101,6 @@ Explanation of the config file's syntax:
 - Paths containing a colon (`:`) character are not supported.
 - The tilde (`~`) character is expanded to the user home directory.
 - Environment variables are supported.
-
-## Integration with other Zsh plugins
-
-- [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (ZVM).
-
-    <kbd>ctrl+t</kbd> is set up inside the ZVM function below. Do not call
-    `zt_setup_widget` when integrating with ZVM. Use:
-
-    ```text
-    function zvm_after_init {
-      zt_zvm_setup_widget
-    }
-    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
-    ```
-
-## Optional configuration
-
-Parameter: `ZT_KEYBIND_START`:
-
-<table>
-<thead>
-<tr>
-<th>Allowed values</th><th>Default value</th><th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/rothgar/mastering-zsh/blob/master/docs/helpers/bindkey.md">
-Key binding</a></td>
-<td><code>^t</code> (<kbd>ctrl+t</kbd>)</td>
-<td>
-Key binding to list dirs & files in fzf.
-</td>
-</tr>
-</tbody>
-</table>
-
-## Functions
-
-- `zt_version`
-- `zt_get_items`
-- `zt_setup_widget`
-- `zt_zvm_setup_widget`
 
 ## Similar projects
 

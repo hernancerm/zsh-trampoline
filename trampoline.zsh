@@ -8,9 +8,10 @@ function zt_version {
   echo '0.1.1-dev'
 }
 
+ZT_PREFIX="${ZT_PREFIX:-^t}"
 ZT_CONFIG_FILEPATH="${HOME}/.zt"
 ZT_CONFIG_LOCAL_FILEPATH="${HOME}/.zt.local"
-ZT_KEYBIND_START="${ZT_KEYBIND_START:-^t}"
+ZT_SET_KEYBINDS="${ZG_SKIP_KEYBINDS:-1}"
 
 # FUNCTIONS
 
@@ -48,7 +49,7 @@ function zt_get_items {
 
 # WIDGET
 
-function _zt_widget {
+function zt-jump {
   if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]]; then
     printf 'ERROR: No config file found for zsh-trampoline, no ~/.zt or ~/.zt.local' 1>&2
     zle .accept-line
@@ -76,15 +77,10 @@ function _zt_widget {
   zle .accept-line
 }
 
-# Standard widget setup.
-function zt_setup_widget {
-  zle -N _zt_widget
-  bindkey "${ZT_KEYBIND_START}" _zt_widget
-}
+zle -N zt-jump
 
-# Setup widget as per zsh-vi-mode requirements.
-# <https://github.com/jeffreytse/zsh-vi-mode/tree/master#custom-widgets-and-keybindings>.
-function zt_zvm_setup_widget {
-  zvm_define_widget _zt_widget
-  zvm_bindkey viins "${ZT_KEYBIND_START}" _zt_widget
-}
+# Set keybinds.
+
+if [[ ZT_SET_KEYBINDS -eq 1 ]]; then
+  bindkey "${ZT_PREFIX}" zt-jump
+fi
