@@ -19,10 +19,13 @@ ZT_SET_KEYBINDS="${ZG_SKIP_KEYBINDS:-1}"
 ## @param $1:string (optional) Item type filter, either 'd' for directory or 'f' for file.
 ## @stdout:string
 function zt_get_items {
-  if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]]; then
+  if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]] && [[ ! -f "${ZT_CONFIG_LOCAL_FILEPATH}" ]]; then
     return
   fi
-  local -a zt_config=(${(f)"$(cat "${ZT_CONFIG_FILEPATH}")"})
+  local -a zt_config=()
+  if [[ -f "${ZT_CONFIG_FILEPATH}" ]]; then
+    zt_config+=(${(f)"$(cat "${ZT_CONFIG_FILEPATH}")"})
+  fi
   if [[ -f "${ZT_CONFIG_LOCAL_FILEPATH}" ]]; then
     zt_config+=(${(f)"$(cat "${ZT_CONFIG_LOCAL_FILEPATH}")"})
   fi
@@ -50,7 +53,7 @@ function zt_get_items {
 # WIDGET
 
 function zt-jump {
-  if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]]; then
+  if [[ ! -f "${ZT_CONFIG_FILEPATH}" ]] && [[ ! -f "${ZT_CONFIG_LOCAL_FILEPATH}" ]]; then
     printf 'ERROR: No config file found for zsh-trampoline, no ~/.zt or ~/.zt.local' 1>&2
     zle .accept-line
     return 1
