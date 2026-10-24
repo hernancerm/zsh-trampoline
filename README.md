@@ -19,7 +19,7 @@ After sourcing the plugin this keybind is set:
 
 1. Install [fzf](https://github.com/junegunn/fzf).
 
-2. Clone the zsh-git repository by executing the below command:
+2. Clone the zsh-trampoline repository by executing the below command:
 
     ```bash
     git clone 'https://github.com/hernancerm/zsh-trampoline.git' \
