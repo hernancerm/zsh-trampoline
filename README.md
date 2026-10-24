@@ -29,14 +29,14 @@ After sourcing the plugin this keybind is set:
 3. Source the plugin (also add command to your `~/.zshrc` to enable on future sessions):
 
     ```bash
-    source "${HOME}/.zsh-trampoline/zsh-trampoline"
+    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
     ```
 
     OR: If you want to set a custom keybind then use:
 
     ```bash
     ZT_SET_KEYBINDS=0
-    source "${HOME}/.zsh-trampoline/zsh-trampoline"
+    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
     bindkey "^t" zt-jump
     ```
 
@@ -44,7 +44,7 @@ After sourcing the plugin this keybind is set:
 
     ```bash
     ZT_SET_KEYBINDS=0
-    source "${HOME}/.zsh-trampoline/zsh-trampoline"
+    source "${HOME}/.zsh-trampoline/zsh-trampoline/trampoline.plugin.zsh"
     function zvm_after_init {
       zvm_define_widget zt-jump
       zvm_bindkey viins "^t" zt-jump
